@@ -3,6 +3,7 @@ package de.mschwan.finance_tracker_dashboard.controller;
 import de.mschwan.finance_tracker_dashboard.dto.TransactionRequest;
 import de.mschwan.finance_tracker_dashboard.dto.TransactionResponse;
 import de.mschwan.finance_tracker_dashboard.service.TransactionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,5 +26,11 @@ public class TransactionController {
   @PostMapping
   public TransactionResponse createTransaction(@RequestBody TransactionRequest request) {
     return transactionService.createTransaction(request);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteTransaction(@PathVariable Long id) {
+    transactionService.deleteTransaction(id);
   }
 }

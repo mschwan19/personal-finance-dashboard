@@ -56,4 +56,11 @@ public class TransactionService {
             transaction.getCategory().getColorHex()
     );
   }
+
+  public void deleteTransaction(Long id) {
+    if (!transactionRepository.existsById(id)) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "TRANSACTION_NOT_FOUND");
+    }
+    transactionRepository.deleteById(id);
+  }
 }
