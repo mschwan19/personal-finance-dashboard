@@ -24,14 +24,14 @@ public class TransactionService {
     this.categoryRepository = categoryRepository;
   }
 
-  public List<TransactionResponse> getAllTransactions() {
-    return transactionRepository.findAll()
+  public List<TransactionResponse> getTransactionsByUserId(String userId) {
+    return transactionRepository.findByUserId(userId)
             .stream()
             .map(this::mapToResponse)
             .collect(Collectors.toList());
   }
 
-  public TransactionResponse createTransaction(TransactionRequest request) {
+  public TransactionResponse createTransaction(TransactionRequest request, String userId) {
     Category category = categoryRepository.findById(request.categoryId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
 
@@ -40,8 +40,32 @@ public class TransactionService {
     transaction.setDate(request.date());
     transaction.setDescription(request.description());
     transaction.setCategory(category);
+    transaction.setUserId(userId); // <-- HIER wird die Brücke zu Keycloak geschlagen!
 
     Transaction savedTransaction = transactionRepository.save(transaction);
+    return mapToResponse(savedTransaction);
+  }
+
+  public void deleteTransaction(Long id, String userId) {
+    Transaction transaction = transactionRepository.findByIdAndUserId(id, userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "TRANSACTION_NOT_FOUND_OR_NOT_AUTHORIZED"));
+
+    transactionRepository.delete(transaction);
+  }
+
+  public TransactionResponse updateTransaction(Long id, TransactionRequest request, String userId) {
+    Transaction existingTransaction = transactionRepository.findByIdAndUserId(id, userId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "TRANSACTION_NOT_FOUND_OR_NOT_AUTHORIZED"));
+
+    Category category = categoryRepository.findById(request.categoryId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+    existingTransaction.setAmount(request.amount());
+    existingTransaction.setDate(request.date());
+    existingTransaction.setDescription(request.description());
+    existingTransaction.setCategory(category);
+
+    Transaction savedTransaction = transactionRepository.save(existingTransaction);
     return mapToResponse(savedTransaction);
   }
 
@@ -55,29 +79,5 @@ public class TransactionService {
             transaction.getCategory().getName(),
             transaction.getCategory().getColorHex()
     );
-  }
-
-  public void deleteTransaction(Long id) {
-    if (!transactionRepository.existsById(id)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "TRANSACTION_NOT_FOUND");
-    }
-    transactionRepository.deleteById(id);
-  }
-
-  public TransactionResponse updateTransaction(Long id, TransactionRequest request) {
-    Transaction existingTransaction = transactionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Transaktion nicht gefunden"));
-
-    Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new RuntimeException("Kategorie nicht gefunden"));
-
-    existingTransaction.setAmount(request.amount());
-    existingTransaction.setDate(request.date());
-    existingTransaction.setDescription(request.description());
-    existingTransaction.setCategory(category);
-
-
-    Transaction savedTransaction = transactionRepository.save(existingTransaction);
-    return mapToResponse(savedTransaction);
   }
 }

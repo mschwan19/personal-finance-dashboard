@@ -5,6 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import TransactionModal from '../components/TransactionModal.vue'
 import { LayoutDashboard, Plus, TrendingUp, TrendingDown, Euro } from 'lucide-vue-next'
+import keycloak from '../utils/keycloak'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -16,17 +17,44 @@ const showModal = ref(false)
 const loadData = async () => {
   isLoading.value = true
   try {
+    // 1. NEU: Token-Update-Check!
+    // Wir prüfen, ob wir überhaupt ein Token haben.
+    // updateToken(30) bedeutet: Wenn das Token in den nächsten 30 Sekunden abläuft, hole ein neues!
+    if (keycloak.token) {
+      try {
+        await keycloak.updateToken(30);
+      } catch (err) {
+        console.warn("Token ist abgelaufen und konnte nicht erneuert werden. Logge neu ein...");
+        keycloak.login();
+        return; // Stoppt die Funktion hier
+      }
+    } else {
+      console.warn("Gar kein Token gefunden. Logge neu ein...");
+      keycloak.login();
+      return; // Stoppt die Funktion hier
+    }
+
+    // 2. Jetzt haben wir garantiert ein frisches Token!
+    const authHeader = {
+      'Authorization': `Bearer ${keycloak.token}`
+    }
+
     const [transRes, catRes] = await Promise.all([
-      fetch('http://localhost:8080/api/transactions'),
-      fetch('http://localhost:8080/api/categories')
+      fetch('http://localhost:8080/api/transactions', { headers: authHeader }),
+      fetch('http://localhost:8080/api/categories', { headers: authHeader })
     ])
 
     if (transRes.ok && catRes.ok) {
       transactions.value = await transRes.json()
       categories.value = await catRes.json()
+    } else if (transRes.status === 401 || catRes.status === 401) {
+      // Zur absoluten Sicherheit: Falls das Backend trotzdem meckert
+      keycloak.login()
+    } else {
+      console.error("Server antwortete mit Fehler:", transRes.status)
     }
   } catch (error) {
-    console.error("Fehler beim Laden:", error)
+    console.error("Netzwerkfehler:", error)
   } finally {
     isLoading.value = false
   }

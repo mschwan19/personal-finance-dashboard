@@ -1,12 +1,10 @@
 <script setup>
-import { useRouter } from 'vue-router'
 import { t } from '../utils/i18n'
 import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet } from 'lucide-vue-next'
-
-const router = useRouter()
+import keycloak from '../utils/keycloak'
 
 const logout = () => {
-  router.push('/login')
+  keycloak.logout({ redirectUri: window.location.origin })
 }
 </script>
 

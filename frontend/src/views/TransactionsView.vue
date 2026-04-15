@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { t, currentLocale } from '../utils/i18n'
 import TransactionModal from '../components/TransactionModal.vue'
 import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro } from 'lucide-vue-next'
+import keycloak from '../utils/keycloak' // WICHTIG: Importiert!
 
 const transactions = ref([])
 const categories = ref([])
@@ -20,14 +21,30 @@ const selectedYear = ref('ALL')
 const loadData = async () => {
   isLoading.value = true
   try {
+    if (keycloak.token) {
+      try {
+        await keycloak.updateToken(30);
+      } catch (err) {
+        keycloak.login();
+        return;
+      }
+    } else {
+      keycloak.login();
+      return;
+    }
+
+    const authHeader = { 'Authorization': `Bearer ${keycloak.token}` }
+
     const [transRes, catRes] = await Promise.all([
-      fetch('http://localhost:8080/api/transactions'),
-      fetch('http://localhost:8080/api/categories')
+      fetch('http://localhost:8080/api/transactions', { headers: authHeader }),
+      fetch('http://localhost:8080/api/categories', { headers: authHeader })
     ])
 
     if (transRes.ok && catRes.ok) {
       transactions.value = await transRes.json()
       categories.value = await catRes.json()
+    } else if (transRes.status === 401) {
+      keycloak.login()
     }
   } catch (error) {
     console.error("Fehler beim Laden:", error)
@@ -47,9 +64,20 @@ const getCategoryType = (categoryId) => {
 
 const deleteTransaction = async (id) => {
   if (!confirm(t('transactions.confirmDelete') || 'Wirklich löschen?')) return
+
   try {
-    const response = await fetch(`http://localhost:8080/api/transactions/${id}`, { method: 'DELETE' })
-    if (response.ok) loadData()
+    if (keycloak.token) {
+      await keycloak.updateToken(30);
+    }
+
+    const response = await fetch(`http://localhost:8080/api/transactions/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${keycloak.token}` }
+    })
+
+    if (response.ok) {
+      loadData()
+    }
   } catch (error) {
     console.error("Fehler beim Löschen:", error)
   }

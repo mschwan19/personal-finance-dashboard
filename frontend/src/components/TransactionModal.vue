@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t } from '../utils/i18n'
+import keycloak from '../utils/keycloak' // WICHTIG: Keycloak importiert
 
-// NEU: Das Modal kann jetzt Daten zum Bearbeiten empfangen
 const props = defineProps({
   editData: {
     type: Object,
@@ -23,20 +23,38 @@ const formData = ref({
 })
 
 onMounted(async () => {
+  if (keycloak.token) {
+    try {
+      await keycloak.updateToken(30);
+    } catch (err) {
+      keycloak.login();
+      return;
+    }
+  } else {
+    keycloak.login();
+    return;
+  }
+
   try {
-    const response = await fetch('http://localhost:8080/api/categories')
+    const response = await fetch('http://localhost:8080/api/categories', {
+      headers: {
+        'Authorization': `Bearer ${keycloak.token}`
+      }
+    })
+
     if (response.ok) {
       categories.value = await response.json()
+    } else if (response.status === 401) {
+      keycloak.login()
     }
   } catch (error) {
     console.error("Kategorien konnten nicht geladen werden:", error)
   }
 
-  // NEU: Wenn wir im Bearbeiten-Modus sind, Formular mit alten Daten füllen
   if (props.editData) {
     formData.value = {
       amount: props.editData.amount,
-      date: props.editData.date.split('T')[0], // Nur das Datum (YYYY-MM-DD)
+      date: props.editData.date.split('T')[0],
       description: props.editData.description,
       categoryId: props.editData.categoryId
     }
@@ -45,6 +63,19 @@ onMounted(async () => {
 
 const submitTransaction = async () => {
   isLoading.value = true
+
+  if (keycloak.token) {
+    try {
+      await keycloak.updateToken(30);
+    } catch (err) {
+      keycloak.login();
+      return;
+    }
+  } else {
+    keycloak.login();
+    return;
+  }
+
   try {
     const isEdit = !!props.editData
     const url = isEdit
@@ -53,13 +84,18 @@ const submitTransaction = async () => {
 
     const response = await fetch(url, {
       method: isEdit ? 'PUT' : 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${keycloak.token}` // Hier ist der Türöffner!
+      },
       body: JSON.stringify(formData.value)
     })
 
     if (response.ok) {
       emit('saved')
       emit('close')
+    } else if (response.status === 401) {
+      keycloak.login()
     }
   } catch (error) {
     console.error("Fehler beim Speichern:", error)
@@ -120,7 +156,6 @@ const submitTransaction = async () => {
 </template>
 
 <style scoped>
-/* CSS bleibt unverändert */
 .modal-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 100; }
 .modal-card { background: var(--white); padding: 30px; border-radius: var(--radius-lg); width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: slideUp 0.3s ease-out; }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

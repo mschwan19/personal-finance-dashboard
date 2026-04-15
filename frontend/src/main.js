@@ -1,8 +1,14 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import { initKeycloak } from './utils/keycloak'
 
-const app = createApp(App)
+initKeycloak()
+    .then((authenticated) => {
+        console.log("Keycloak ist bereit! Authentifiziert:", authenticated)
 
-app.use(router)
-app.mount('#app')
+        createApp(App).use(router).mount('#app')
+    })
+    .catch((error) => {
+        console.error("Keycloak Initialisierung fehlgeschlagen!", error)
+    })
