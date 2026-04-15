@@ -13,7 +13,7 @@ const logout = () => {
 <template>
   <aside class="sidebar">
     <div class="logo">
-      <h2><Wallet class="logo-icon" :size="24" /> FinanceApp</h2>
+      <h2><Wallet class="logo-icon" :size="24" /> Finvo</h2>
     </div>
 
     <nav class="menu">

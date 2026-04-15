@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { t, currentLocale } from '../utils/i18n' // i18n importiert
+import { t, currentLocale } from '../utils/i18n'
 import { Wallet, Mail, Lock, LogIn, Loader2 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -33,11 +33,13 @@ const toggleLanguage = () => {
 
     <div class="login-card">
       <div class="brand">
-        <div class="logo-circle">
-          <Wallet :size="32" color="white" />
+        <div class="brand-row">
+          <div class="logo-circle">
+            <Wallet :size="28" color="white" />
+          </div>
+          <h2>Finvo</h2>
         </div>
-        <h2>{{ t('login.title') }}</h2>
-        <p>{{ t('login.subtitle') }}</p>
+        <p>{{ t('login.title') }}</p>
       </div>
 
       <form @submit.prevent="handleLogin" class="login-form">
@@ -94,20 +96,22 @@ const toggleLanguage = () => {
 </template>
 
 <style scoped>
-/* Gleiches CSS wie vorher, plus der Footer-Link und der Sprach-Toggle */
 .login-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-gray); display: flex; justify-content: center; align-items: center; z-index: 9999; transition: background-color 0.3s ease; }
 
-/* NEU: Styling für den Sprachwechsler */
 .lang-toggle { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background-color: var(--white); border: 2px solid #e2e8f0; border-radius: 20px; cursor: pointer; font-weight: bold; color: var(--text-main); transition: all 0.2s; display: flex; align-items: center; gap: 5px; box-shadow: var(--shadow-soft); }
 :root.dark-mode .lang-toggle { background-color: var(--bg-gray); border-color: #334155; }
 .lang-toggle:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
 
 .login-card { background-color: var(--white); width: 100%; max-width: 400px; padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); animation: fadeIn 0.4s ease-out; transition: background-color 0.3s ease, box-shadow 0.3s ease; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* NEU: Styles für die Brand-Zeile */
 .brand { text-align: center; margin-bottom: 30px; }
-.logo-circle { width: 64px; height: 64px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; box-shadow: 0 8px 16px rgba(16, 185, 129, 0.2); }
-.brand h2 { margin: 0 0 5px 0; color: var(--text-main); font-size: 1.6rem; }
+.brand-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
+.logo-circle { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }
+.brand h2 { margin: 0; color: var(--text-main); font-size: 1.8rem; font-weight: 800; }
 .brand p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+
 .login-form { display: flex; flex-direction: column; gap: 20px; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
 .form-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -126,7 +130,6 @@ const toggleLanguage = () => {
 .spinner { animation: spin 1s linear infinite; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* NEU: Styling für den Footer-Link zur Registrierung */
 .footer-link { text-align: center; margin-top: 10px; font-size: 0.9rem; color: var(--text-muted); }
 .footer-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
 .footer-link a:hover { text-decoration: underline; }

@@ -63,8 +63,7 @@ const dictionaries = {
             darkMode: "Dark Mode"
         },
         login: {
-            title: "Welcome back",
-            subtitle: "Please log in to continue.",
+            title: "Please log in to continue.",
             email: "Email Address",
             password: "Password",
             forgotPassword: "Forgot Password?",
@@ -145,8 +144,7 @@ const dictionaries = {
             darkMode: "Dunkler Modus"
         },
         login: {
-            title: "Willkommen zurück",
-            subtitle: "Bitte melde dich an, um fortzufahren.",
+            title: "Bitte melde dich an, um fortzufahren.",
             email: "E-Mail Adresse",
             password: "Passwort",
             forgotPassword: "Passwort vergessen?",
