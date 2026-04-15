@@ -28,6 +28,11 @@ public class TransactionController {
     return transactionService.createTransaction(request);
   }
 
+  @PutMapping("/{id}")
+  public TransactionResponse updateTransaction(@PathVariable Long id, @RequestBody TransactionRequest request) {
+    return transactionService.updateTransaction(id, request);
+  }
+
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteTransaction(@PathVariable Long id) {

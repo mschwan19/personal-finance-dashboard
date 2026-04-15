@@ -63,4 +63,21 @@ public class TransactionService {
     }
     transactionRepository.deleteById(id);
   }
+
+  public TransactionResponse updateTransaction(Long id, TransactionRequest request) {
+    Transaction existingTransaction = transactionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Transaktion nicht gefunden"));
+
+    Category category = categoryRepository.findById(request.categoryId())
+            .orElseThrow(() -> new RuntimeException("Kategorie nicht gefunden"));
+
+    existingTransaction.setAmount(request.amount());
+    existingTransaction.setDate(request.date());
+    existingTransaction.setDescription(request.description());
+    existingTransaction.setCategory(category);
+
+
+    Transaction savedTransaction = transactionRepository.save(existingTransaction);
+    return mapToResponse(savedTransaction);
+  }
 }
