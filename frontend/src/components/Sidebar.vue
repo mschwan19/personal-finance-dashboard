@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { t } from '../utils/i18n'
+import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet } from 'lucide-vue-next'
 
 const router = useRouter()
 
@@ -12,18 +13,29 @@ const logout = () => {
 <template>
   <aside class="sidebar">
     <div class="logo">
-      <h2>💳 FinanceApp</h2>
+      <h2><Wallet class="logo-icon" :size="24" /> FinanceApp</h2>
     </div>
 
     <nav class="menu">
-      <router-link to="/" class="nav-item">📊 {{ t('dashboard.currentBalance') }}</router-link>
-      <router-link to="/transactions" class="nav-item">💸 {{ t('dashboard.recentMovements') }}</router-link>
-      <router-link to="/settings" class="nav-item">⚙️ Settings</router-link>
+      <router-link to="/" class="nav-item">
+        <LayoutDashboard :size="20" />
+        <span>{{ t('dashboard.currentBalance') }}</span>
+      </router-link>
+
+      <router-link to="/transactions" class="nav-item">
+        <ArrowRightLeft :size="20" />
+        <span>{{ t('dashboard.recentMovements') }}</span>
+      </router-link>
+
+      <router-link to="/settings" class="nav-item">
+        <Settings :size="20" />
+        <span>{{ t('settings.title') }}</span> </router-link>
 
       <div class="divider"></div>
 
       <button @click="logout" class="nav-item logout-btn">
-        🚪 Logout
+        <LogOut :size="20" />
+        <span>Logout</span>
       </button>
     </nav>
   </aside>
@@ -41,9 +53,16 @@ const logout = () => {
 }
 
 .logo h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0 0 40px 10px;
   color: var(--text-main);
   font-size: 1.4rem;
+}
+
+.logo-icon {
+  color: var(--primary);
 }
 
 .menu {
@@ -64,11 +83,12 @@ const logout = () => {
   text-align: left;
   cursor: pointer;
   font-size: 0.95rem;
+
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
-/* GEÄNDERT: Nutzt jetzt die CSS-Variable für den Hintergrund */
 .nav-item:hover {
   background-color: var(--bg-hover);
   color: var(--text-main);
@@ -76,8 +96,8 @@ const logout = () => {
 }
 
 .router-link-active {
-  background-color: var(--bg-hover); /* Auch hier die Variable nutzen */
-  color: var(--primary); /* Highlight-Farbe für den aktiven Link */
+  background-color: var(--bg-hover);
+  color: var(--primary);
 }
 
 .divider {

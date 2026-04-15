@@ -44,15 +44,24 @@ const dictionaries = {
             save: "Save",
             saving: "Saving..."
         },
+        transactions: {
+            title: "Transactions",
+            subtitle: "Manage your income and expenses.",
+            search: "Search description...",
+            allTypes: "All Types",
+            edit: "Edit",
+            delete: "Delete",
+            confirmDelete: "Are you sure you want to delete this transaction?"
+        },
         settings: {
-            title: "⚙️ Settings",
+            title: "Settings",
             subtitle: "Personalize your app.",
-            language: "🌍 Language",
+            language: "Language",
             langDesc: "Choose your preferred display language:",
-            appearance: "🌙 Appearance",
+            appearance: "Appearance",
             themeDesc: "Choose between light and dark mode:",
-            lightMode: "☀️ Light Mode",
-            darkMode: "🌙 Dark Mode"
+            lightMode: "Light Mode",
+            darkMode: "Dark Mode"
         }
     },
     de: {
@@ -60,7 +69,7 @@ const dictionaries = {
             welcomeTitle: "Willkommen zurück!",
             welcomeSubtitle: "Hier ist dein finanzieller Überblick.",
             newTransaction: "+ Neue Transaktion",
-            currentBalance: "Aktueller Saldo",
+            currentBalance: "Übersicht",
             income: "Einnahmen",
             expenses: "Ausgaben",
             recentMovements: "Letzte Bewegungen",
@@ -96,15 +105,24 @@ const dictionaries = {
             save: "Speichern",
             saving: "Speichert..."
         },
+        transactions: {
+            title: "Transaktionen",
+            subtitle: "Verwalte deine Einnahmen und Ausgaben.",
+            search: "Beschreibung suchen...",
+            allTypes: "Alle Typen",
+            edit: "Bearbeiten",
+            delete: "Löschen",
+            confirmDelete: "Möchtest du diese Transaktion wirklich löschen?"
+        },
         settings: {
-            title: "⚙️ Einstellungen",
+            title: "Einstellungen",
             subtitle: "Personalisiere deine App.",
-            language: "🌍 Sprache",
+            language: "Sprache",
             langDesc: "Wähle deine bevorzugte Anzeigesprache:",
-            appearance: "🌙 Erscheinungsbild",
+            appearance: "Erscheinungsbild",
             themeDesc: "Wähle zwischen hellem und dunklem Design:",
-            lightMode: "☀️ Heller Modus",
-            darkMode: "🌙 Dunkler Modus"
+            lightMode: "Heller Modus",
+            darkMode: "Dunkler Modus"
         }
     }
 }

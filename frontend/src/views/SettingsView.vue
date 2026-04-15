@@ -1,6 +1,8 @@
 <script setup>
 import { currentLocale, t } from '../utils/i18n'
-import { isDarkMode } from '../utils/theme' // Importiere den Theme-Schalter
+import { isDarkMode } from '../utils/theme'
+// Importiere die passenden Icons für die Settings
+import { Settings, Globe, Palette, Sun, Moon } from 'lucide-vue-next'
 
 const setLanguage = (lang) => {
   currentLocale.value = lang
@@ -14,13 +16,15 @@ const setTheme = (isDark) => {
 <template>
   <div class="settings-page">
     <header class="settings-header">
-      <h2>{{ t('settings.title') }}</h2>
-      <p class="subtitle">{{ t('settings.subtitle') }}</p>
+      <div class="header-titles">
+        <h2><Settings class="icon-title" :size="28" /> {{ t('settings.title') }}</h2>
+        <p class="subtitle">{{ t('settings.subtitle') }}</p>
+      </div>
     </header>
 
     <div class="settings-grid">
       <section class="settings-card">
-        <h3>{{ t('settings.language') }}</h3>
+        <h3><Globe class="section-icon" :size="20" /> {{ t('settings.language') }}</h3>
         <p>{{ t('settings.langDesc') }}</p>
 
         <div class="button-group">
@@ -28,19 +32,19 @@ const setTheme = (isDark) => {
               @click="setLanguage('de')"
               :class="['action-btn', { active: currentLocale === 'de' }]"
           >
-            🇩🇪 Deutsch
+            <span class="emoji-flag">🇩🇪</span> Deutsch
           </button>
           <button
               @click="setLanguage('en')"
               :class="['action-btn', { active: currentLocale === 'en' }]"
           >
-            🇬🇧 English
+            <span class="emoji-flag">🇬🇧</span> English
           </button>
         </div>
       </section>
 
       <section class="settings-card">
-        <h3>{{ t('settings.appearance') }}</h3>
+        <h3><Palette class="section-icon" :size="20" /> {{ t('settings.appearance') }}</h3>
         <p>{{ t('settings.themeDesc') }}</p>
 
         <div class="button-group">
@@ -48,13 +52,13 @@ const setTheme = (isDark) => {
               @click="setTheme(false)"
               :class="['action-btn', { active: !isDarkMode }]"
           >
-            {{ t('settings.lightMode') }}
+            <Sun :size="18" /> {{ t('settings.lightMode') }}
           </button>
           <button
               @click="setTheme(true)"
               :class="['action-btn', { active: isDarkMode }]"
           >
-            {{ t('settings.darkMode') }}
+            <Moon :size="18" /> {{ t('settings.darkMode') }}
           </button>
         </div>
       </section>
@@ -64,7 +68,8 @@ const setTheme = (isDark) => {
 
 <style scoped>
 .settings-header { margin-bottom: 30px; }
-.settings-header h2 { margin: 0 0 5px 0; color: var(--text-main); font-size: 2rem; }
+.header-titles h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 5px 0; color: var(--text-main); font-size: 2rem; }
+.icon-title { color: var(--primary); }
 .subtitle { margin: 0; color: var(--text-muted); }
 
 .settings-grid {
@@ -81,7 +86,14 @@ const setTheme = (isDark) => {
   box-shadow: var(--shadow-soft);
 }
 
-.settings-card h3 { margin-top: 0; color: var(--text-main); }
+.settings-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0;
+  color: var(--text-main);
+}
+.section-icon { color: var(--text-muted); }
 .settings-card p { color: var(--text-muted); }
 
 .button-group {
@@ -91,6 +103,10 @@ const setTheme = (isDark) => {
 }
 
 .action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Sorgt für perfekten Abstand zwischen Icon/Flagge und Text */
   padding: 12px 24px;
   border: 2px solid #e2e8f0;
   background-color: transparent;
@@ -99,10 +115,14 @@ const setTheme = (isDark) => {
   font-weight: bold;
   color: var(--text-muted);
   transition: all 0.2s;
-  flex: 1; /* Knöpfe nehmen gleich viel Platz ein */
+  flex: 1;
 }
 
-/* Anpassung für den Dark Mode der inaktiven Buttons */
+.emoji-flag {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 :root.dark-mode .action-btn {
   border-color: #334155;
   color: #cbd5e1;
