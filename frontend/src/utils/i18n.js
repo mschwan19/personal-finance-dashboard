@@ -28,7 +28,6 @@ const dictionaries = {
             LEISURE: "Leisure", MOBILITY: "Mobility",
             SHOPPING: "Shopping", INVESTMENTS: "Investments"
         },
-        // NEU: Für das Modal und die Dropdowns
         types: {
             INCOME: "Income",
             EXPENSE: "Expense"
@@ -62,6 +61,28 @@ const dictionaries = {
             themeDesc: "Choose between light and dark mode:",
             lightMode: "Light Mode",
             darkMode: "Dark Mode"
+        },
+        login: {
+            title: "Welcome back",
+            subtitle: "Please log in to continue.",
+            email: "Email Address",
+            password: "Password",
+            forgotPassword: "Forgot Password?",
+            submit: "Login",
+            loading: "Logging in...",
+            noAccount: "Don't have an account?",
+            registerLink: "Register now"
+        },
+        register: {
+            title: "Create Account",
+            subtitle: "Start your financial tracking today.",
+            name: "Full Name",
+            namePlaceholder: "John Doe",
+            confirmPassword: "Confirm Password",
+            confirmPlaceholder: "••••••••",
+            submit: "Register",
+            alreadyHaveAccount: "Already have an account?",
+            loginLink: "Log in here"
         }
     },
     de: {
@@ -89,7 +110,6 @@ const dictionaries = {
             LEISURE: "Freizeit", MOBILITY: "Mobilität",
             SHOPPING: "Shopping", INVESTMENTS: "Sparen & Investments"
         },
-        // NEU: Für das Modal und die Dropdowns
         types: {
             INCOME: "Einnahme",
             EXPENSE: "Ausgabe"
@@ -123,6 +143,28 @@ const dictionaries = {
             themeDesc: "Wähle zwischen hellem und dunklem Design:",
             lightMode: "Heller Modus",
             darkMode: "Dunkler Modus"
+        },
+        login: {
+            title: "Willkommen zurück",
+            subtitle: "Bitte melde dich an, um fortzufahren.",
+            email: "E-Mail Adresse",
+            password: "Passwort",
+            forgotPassword: "Passwort vergessen?",
+            submit: "Anmelden",
+            loading: "Anmelden...",
+            noAccount: "Noch kein Konto?",
+            registerLink: "Jetzt registrieren"
+        },
+        register: {
+            title: "Konto erstellen",
+            subtitle: "Starte heute mit deinem Finanz-Tracking.",
+            name: "Vollständiger Name",
+            namePlaceholder: "Max Mustermann",
+            confirmPassword: "Passwort bestätigen",
+            confirmPlaceholder: "••••••••",
+            submit: "Registrieren",
+            alreadyHaveAccount: "Bereits ein Konto?",
+            loginLink: "Jetzt anmelden"
         }
     }
 }
