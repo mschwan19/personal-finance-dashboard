@@ -4,7 +4,7 @@ import { t, currentLocale } from '../utils/i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import TransactionModal from '../components/TransactionModal.vue'
-import { LayoutDashboard, Plus, TrendingUp, TrendingDown } from 'lucide-vue-next'
+import { LayoutDashboard, Plus, TrendingUp, TrendingDown, Euro } from 'lucide-vue-next'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -99,7 +99,10 @@ const recentTransactions = computed(() => {
 })
 
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value)
+  return new Intl.NumberFormat('de-DE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value)
 }
 
 const chartData = computed(() => {
@@ -173,20 +176,26 @@ const chartOptions = {
       <section class="kpi-grid">
         <div :class="['kpi-card', 'balance', { 'is-negative': balance < 0 }]">
           <h3>{{ t('dashboard.currentBalance') }}</h3>
-          <div class="amount">{{ formatCurrency(balance) }}</div>
+          <div class="amount flex-amount">
+            {{ formatCurrency(balance) }} <Euro :size="28" />
+          </div>
         </div>
         <div class="kpi-card income">
           <div class="icon-wrapper"><TrendingUp :size="28" color="var(--primary)" /></div>
           <div>
             <h3>{{ t('dashboard.income') }}</h3>
-            <div class="amount success">{{ formatCurrency(totalIncome) }}</div>
+            <div class="amount success flex-amount">
+              {{ formatCurrency(totalIncome) }} <Euro :size="22" />
+            </div>
           </div>
         </div>
         <div class="kpi-card expense">
           <div class="icon-wrapper"><TrendingDown :size="28" color="#ef4444" /></div>
           <div>
             <h3>{{ t('dashboard.expenses') }}</h3>
-            <div class="amount danger">{{ formatCurrency(totalExpense) }}</div>
+            <div class="amount danger flex-amount">
+              {{ formatCurrency(totalExpense) }} <Euro :size="22" />
+            </div>
           </div>
         </div>
       </section>
@@ -207,8 +216,8 @@ const chartOptions = {
                 </div>
               </div>
               <div class="t-right">
-                <span :class="['t-amount', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
-                  {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }}
+                <span :class="['t-amount flex-amount-small', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
+                  {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }} <Euro :size="16" />
                 </span>
                 <span class="t-date">{{ new Date(transaction.date).toLocaleDateString(currentLocale === 'de' ? 'de-DE' : 'en-US') }}</span>
               </div>
@@ -287,4 +296,17 @@ const chartOptions = {
 .t-date { color: var(--text-muted); font-size: 0.85rem; }
 .chart-container { position: relative; height: 250px; width: 100%; }
 .empty-state { padding: 30px; text-align: center; color: var(--text-muted); }
+
+/* --- NEU: Flex-Klassen für das Euro Icon --- */
+.flex-amount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flex-amount-small {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
 </style>

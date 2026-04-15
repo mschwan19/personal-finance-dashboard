@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { t, currentLocale } from '../utils/i18n'
 import TransactionModal from '../components/TransactionModal.vue'
-import { Search, Plus, Pencil, Trash2, ArrowRightLeft } from 'lucide-vue-next'
+import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro } from 'lucide-vue-next'
 
 const transactions = ref([])
 const categories = ref([])
@@ -96,7 +96,10 @@ const filteredTransactions = computed(() => {
 })
 
 const formatCurrency = (value) => {
-  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(value)
+  return new Intl.NumberFormat('de-DE', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(value)
 }
 </script>
 
@@ -181,8 +184,8 @@ const formatCurrency = (value) => {
           </div>
 
           <div class="t-right">
-            <span :class="['t-amount', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
-              {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }}
+            <span :class="['t-amount flex-amount-small', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
+              {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }} <Euro :size="16" />
             </span>
 
             <div class="t-actions">
@@ -222,7 +225,7 @@ const formatCurrency = (value) => {
 /* --- CONTENT BOX BASE --- */
 .content-box { background-color: var(--white); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); margin-bottom: 20px; }
 
-/* --- FILTER SECTION (NEU) --- */
+/* --- FILTER SECTION --- */
 .filter-section { display: flex; flex-direction: column; gap: 15px; padding: 20px 25px; }
 
 /* Suchleiste */
@@ -265,4 +268,10 @@ const formatCurrency = (value) => {
 .action-btn.delete:hover { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; }
 
 .empty-state { padding: 40px; text-align: center; color: var(--text-muted); }
+
+.flex-amount-small {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
 </style>

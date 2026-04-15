@@ -7,7 +7,7 @@ const dictionaries = {
         dashboard: {
             welcomeTitle: "Welcome back!",
             welcomeSubtitle: "Here is your financial overview.",
-            newTransaction: "+ New Transaction",
+            newTransaction: "New Transaction",
             currentBalance: "Current Balance",
             income: "Income",
             expenses: "Expenses",
@@ -68,7 +68,7 @@ const dictionaries = {
         dashboard: {
             welcomeTitle: "Willkommen zurück!",
             welcomeSubtitle: "Hier ist dein finanzieller Überblick.",
-            newTransaction: "+ Neue Transaktion",
+            newTransaction: "Neue Transaktion",
             currentBalance: "Übersicht",
             income: "Einnahmen",
             expenses: "Ausgaben",
