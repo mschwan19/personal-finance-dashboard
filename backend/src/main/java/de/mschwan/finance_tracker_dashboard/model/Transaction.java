@@ -18,6 +18,10 @@ public class Transaction {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  // NEU: Die eindeutige ID des Keycloak-Benutzers
+  @Column(name = "user_id", nullable = false)
+  private String userId;
+
   @Column(nullable = false)
   private BigDecimal amount;
 
