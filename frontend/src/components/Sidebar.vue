@@ -1,10 +1,10 @@
 <script setup>
 import { useRouter } from 'vue-router'
+import { t } from '../utils/i18n'
 
 const router = useRouter()
 
 const logout = () => {
-  // Später: Login-Logik/Token löschen
   router.push('/login')
 }
 </script>
@@ -12,18 +12,18 @@ const logout = () => {
 <template>
   <aside class="sidebar">
     <div class="logo">
-      <h2>FinanceApp</h2>
+      <h2>💳 FinanceApp</h2>
     </div>
 
     <nav class="menu">
-      <router-link to="/" class="nav-item">📊 Dashboard</router-link>
-      <router-link to="/transactions" class="nav-item">💸 Transaktionen</router-link>
-      <router-link to="/settings" class="nav-item">⚙️ Einstellungen</router-link>
+      <router-link to="/" class="nav-item">📊 {{ t('dashboard.currentBalance') }}</router-link>
+      <router-link to="/transactions" class="nav-item">💸 {{ t('dashboard.recentMovements') }}</router-link>
+      <router-link to="/settings" class="nav-item">⚙️ Settings</router-link>
 
       <div class="divider"></div>
 
       <button @click="logout" class="nav-item logout-btn">
-        🚪 Abmelden
+        🚪 Logout
       </button>
     </nav>
   </aside>
@@ -68,21 +68,26 @@ const logout = () => {
   align-items: center;
 }
 
+/* GEÄNDERT: Nutzt jetzt die CSS-Variable für den Hintergrund */
 .nav-item:hover {
-  background-color: #f8fafc;
+  background-color: var(--bg-hover);
   color: var(--text-main);
   transform: translateX(4px);
 }
 
 .router-link-active {
-  background-color: #e2e8f0;
-  color: #0f172a;
+  background-color: var(--bg-hover); /* Auch hier die Variable nutzen */
+  color: var(--primary); /* Highlight-Farbe für den aktiven Link */
 }
 
 .divider {
   height: 1px;
-  background-color: #f1f5f9;
+  background-color: rgba(0, 0, 0, 0.05);
   margin: 15px 10px;
+}
+
+:root.dark-mode .divider {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .logout-btn {
@@ -92,5 +97,9 @@ const logout = () => {
 .logout-btn:hover {
   background-color: #fef2f2;
   color: #dc2626;
+}
+
+:root.dark-mode .logout-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
 }
 </style>

@@ -5,9 +5,19 @@
     --text-main: #2c3e50;
     --text-muted: #64748b;
     --white: #ffffff;
+    --bg-hover: #f1f5f9;
     --radius-lg: 24px;
     --radius-md: 14px;
     --shadow-soft: 0 10px 30px rgba(0,0,0,0.04);
+}
+
+:root.dark-mode {
+    --bg-gray: #0f172a;      /* Sehr dunkles Blau-Grau für den Hintergrund */
+    --white: #1e293b;        /* Etwas helleres Dunkelgrau für die Karten */
+    --text-main: #f8fafc;    /* Weißer Text */
+    --text-muted: #94a3b8;
+    --bg-hover: #334155;
+    --shadow-soft: 0 10px 30px rgba(0,0,0,0.3); /* Stärkerer Schatten für Tiefe */
 }
 
 body {
@@ -17,4 +27,8 @@ body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--text-main);
     -webkit-font-smoothing: antialiased;
+}
+
+.content-box, .kpi-card, .sidebar, .content-card, .modal-card, .settings-card, .transaction-item, input, select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

@@ -43,6 +43,16 @@ const dictionaries = {
             select: "Please select...",
             save: "Save",
             saving: "Saving..."
+        },
+        settings: {
+            title: "⚙️ Settings",
+            subtitle: "Personalize your app.",
+            language: "🌍 Language",
+            langDesc: "Choose your preferred display language:",
+            appearance: "🌙 Appearance",
+            themeDesc: "Choose between light and dark mode:",
+            lightMode: "☀️ Light Mode",
+            darkMode: "🌙 Dark Mode"
         }
     },
     de: {
@@ -85,6 +95,16 @@ const dictionaries = {
             select: "Bitte wählen...",
             save: "Speichern",
             saving: "Speichert..."
+        },
+        settings: {
+            title: "⚙️ Einstellungen",
+            subtitle: "Personalisiere deine App.",
+            language: "🌍 Sprache",
+            langDesc: "Wähle deine bevorzugte Anzeigesprache:",
+            appearance: "🌙 Erscheinungsbild",
+            themeDesc: "Wähle zwischen hellem und dunklem Design:",
+            lightMode: "☀️ Heller Modus",
+            darkMode: "🌙 Dunkler Modus"
         }
     }
 }
