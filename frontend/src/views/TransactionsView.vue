@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { t, currentLocale } from '../utils/i18n'
 import TransactionModal from '../components/TransactionModal.vue'
 import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro } from 'lucide-vue-next'
-import keycloak from '../utils/keycloak' // WICHTIG: Importiert!
+import api from '../utils/axios' // NEU: Unser Axios Postbote
 
 const transactions = ref([])
 const categories = ref([])
@@ -21,31 +21,13 @@ const selectedYear = ref('ALL')
 const loadData = async () => {
   isLoading.value = true
   try {
-    if (keycloak.token) {
-      try {
-        await keycloak.updateToken(30);
-      } catch (err) {
-        keycloak.login();
-        return;
-      }
-    } else {
-      keycloak.login();
-      return;
-    }
-
-    const authHeader = { 'Authorization': `Bearer ${keycloak.token}` }
-
     const [transRes, catRes] = await Promise.all([
-      fetch('http://localhost:8080/api/transactions', { headers: authHeader }),
-      fetch('http://localhost:8080/api/categories', { headers: authHeader })
+      api.get('/transactions'),
+      api.get('/categories')
     ])
 
-    if (transRes.ok && catRes.ok) {
-      transactions.value = await transRes.json()
-      categories.value = await catRes.json()
-    } else if (transRes.status === 401) {
-      keycloak.login()
-    }
+    transactions.value = transRes.data
+    categories.value = catRes.data
   } catch (error) {
     console.error("Fehler beim Laden:", error)
   } finally {
@@ -66,18 +48,9 @@ const deleteTransaction = async (id) => {
   if (!confirm(t('transactions.confirmDelete') || 'Wirklich löschen?')) return
 
   try {
-    if (keycloak.token) {
-      await keycloak.updateToken(30);
-    }
-
-    const response = await fetch(`http://localhost:8080/api/transactions/${id}`, {
-      method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${keycloak.token}` }
-    })
-
-    if (response.ok) {
-      loadData()
-    }
+    // MAGIE: Einfach api.delete aufrufen
+    await api.delete(`/transactions/${id}`)
+    loadData()
   } catch (error) {
     console.error("Fehler beim Löschen:", error)
   }

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t } from '../utils/i18n'
-import keycloak from '../utils/keycloak'
+import api from '../utils/axios' // NEU: Unser Axios Postbote
 
 const props = defineProps({
   editData: {
@@ -23,30 +23,10 @@ const formData = ref({
 })
 
 onMounted(async () => {
-  if (keycloak.token) {
-    try {
-      await keycloak.updateToken(30);
-    } catch (err) {
-      keycloak.login();
-      return;
-    }
-  } else {
-    keycloak.login();
-    return;
-  }
-
   try {
-    const response = await fetch('http://localhost:8080/api/categories', {
-      headers: {
-        'Authorization': `Bearer ${keycloak.token}`
-      }
-    })
-
-    if (response.ok) {
-      categories.value = await response.json()
-    } else if (response.status === 401) {
-      keycloak.login()
-    }
+    // MAGIE: api macht alles im Hintergrund
+    const response = await api.get('/categories')
+    categories.value = response.data
   } catch (error) {
     console.error("Kategorien konnten nicht geladen werden:", error)
   }
@@ -64,39 +44,19 @@ onMounted(async () => {
 const submitTransaction = async () => {
   isLoading.value = true
 
-  if (keycloak.token) {
-    try {
-      await keycloak.updateToken(30);
-    } catch (err) {
-      keycloak.login();
-      return;
-    }
-  } else {
-    keycloak.login();
-    return;
-  }
-
   try {
     const isEdit = !!props.editData
-    const url = isEdit
-        ? `http://localhost:8080/api/transactions/${props.editData.id}`
-        : 'http://localhost:8080/api/transactions'
+    const url = isEdit ? `/transactions/${props.editData.id}` : '/transactions'
 
-    const response = await fetch(url, {
-      method: isEdit ? 'PUT' : 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${keycloak.token}`
-      },
-      body: JSON.stringify(formData.value)
-    })
-
-    if (response.ok) {
-      emit('saved')
-      emit('close')
-    } else if (response.status === 401) {
-      keycloak.login()
+    // MAGIE: Post oder Put, Daten reinwerfen, fertig.
+    if (isEdit) {
+      await api.put(url, formData.value)
+    } else {
+      await api.post(url, formData.value)
     }
+
+    emit('saved')
+    emit('close')
   } catch (error) {
     console.error("Fehler beim Speichern:", error)
   } finally {

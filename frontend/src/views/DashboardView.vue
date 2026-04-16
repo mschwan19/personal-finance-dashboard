@@ -6,6 +6,7 @@ import { Pie } from 'vue-chartjs'
 import TransactionModal from '../components/TransactionModal.vue'
 import { LayoutDashboard, Plus, TrendingUp, TrendingDown, Euro } from 'lucide-vue-next'
 import keycloak from '../utils/keycloak'
+import api from '../utils/axios'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -29,39 +30,16 @@ const userName = computed(() => {
 const loadData = async () => {
   isLoading.value = true
   try {
-     if (keycloak.token) {
-      try {
-        await keycloak.updateToken(30);
-      } catch (err) {
-        console.warn("Token ist abgelaufen und konnte nicht erneuert werden. Logge neu ein...");
-        keycloak.login();
-        return;
-      }
-    } else {
-      console.warn("Gar kein Token gefunden. Logge neu ein...");
-      keycloak.login();
-      return;
-    }
-
-    const authHeader = {
-      'Authorization': `Bearer ${keycloak.token}`
-    }
-
     const [transRes, catRes] = await Promise.all([
-      fetch('http://localhost:8080/api/transactions', { headers: authHeader }),
-      fetch('http://localhost:8080/api/categories', { headers: authHeader })
+      api.get('/transactions'),
+      api.get('/categories')
     ])
 
-    if (transRes.ok && catRes.ok) {
-      transactions.value = await transRes.json()
-      categories.value = await catRes.json()
-    } else if (transRes.status === 401 || catRes.status === 401) {
-      keycloak.login()
-    } else {
-      console.error("Server antwortete mit Fehler:", transRes.status)
-    }
+    transactions.value = transRes.data
+    categories.value = catRes.data
+
   } catch (error) {
-    console.error("Netzwerkfehler:", error)
+    console.error("Netzwerk- oder Serverfehler:", error)
   } finally {
     isLoading.value = false
   }
