@@ -1,7 +1,15 @@
 <script setup>
 import { t } from '../utils/i18n'
-import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet } from 'lucide-vue-next'
+// User-Icon hinzugefügt
+import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet, User } from 'lucide-vue-next'
 import keycloak from '../utils/keycloak'
+
+// Öffnet die von Keycloak vorgefertigte Account-Management-Seite
+const openProfile = () => {
+  if (keycloak.authenticated) {
+    keycloak.accountManagement()
+  }
+}
 
 const logout = () => {
   keycloak.logout({ redirectUri: window.location.origin })
@@ -27,13 +35,19 @@ const logout = () => {
 
       <router-link to="/settings" class="nav-item">
         <Settings :size="20" />
-        <span>{{ t('settings.title') }}</span> </router-link>
+        <span>{{ t('settings.title') }}</span>
+      </router-link>
+
+      <button @click="openProfile" class="nav-item">
+        <User :size="20" />
+        <span>{{ t('sidebar.profile') }}</span>
+      </button>
 
       <div class="divider"></div>
 
       <button @click="logout" class="nav-item logout-btn">
         <LogOut :size="20" />
-        <span>Logout</span>
+        <span>{{ t('sidebar.logout') }}</span>
       </button>
     </nav>
   </aside>

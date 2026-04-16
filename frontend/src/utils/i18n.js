@@ -65,6 +65,10 @@ const dictionaries = {
             lightMode: "Light Mode",
             darkMode: "Dark Mode"
         },
+        sidebar: {
+            profile: "Profile",
+            logout: "Logout"
+        },
         login: {
             title: "Please log in to continue.",
             email: "Email Address",
@@ -148,6 +152,10 @@ const dictionaries = {
             themeDesc: "Wähle zwischen hellem und dunklem Design:",
             lightMode: "Heller Modus",
             darkMode: "Dunkler Modus"
+        },
+        sidebar: {
+            profile: "Profil",
+            logout: "Abmelden"
         },
         login: {
             title: "Bitte melde dich an, um fortzufahren.",
