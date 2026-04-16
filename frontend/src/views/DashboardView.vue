@@ -14,27 +14,35 @@ const categories = ref([])
 const isLoading = ref(true)
 const showModal = ref(false)
 
+const userName = computed(() => {
+  if (!keycloak.tokenParsed) return ''
+
+  const firstName = keycloak.tokenParsed.given_name || ''
+  const lastName = keycloak.tokenParsed.family_name || ''
+  const preferredName = keycloak.tokenParsed.preferred_username || ''
+
+  const fullRealName = `${firstName} ${lastName}`.trim()
+
+  return fullRealName || preferredName
+})
+
 const loadData = async () => {
   isLoading.value = true
   try {
-    // 1. NEU: Token-Update-Check!
-    // Wir prüfen, ob wir überhaupt ein Token haben.
-    // updateToken(30) bedeutet: Wenn das Token in den nächsten 30 Sekunden abläuft, hole ein neues!
-    if (keycloak.token) {
+     if (keycloak.token) {
       try {
         await keycloak.updateToken(30);
       } catch (err) {
         console.warn("Token ist abgelaufen und konnte nicht erneuert werden. Logge neu ein...");
         keycloak.login();
-        return; // Stoppt die Funktion hier
+        return;
       }
     } else {
       console.warn("Gar kein Token gefunden. Logge neu ein...");
       keycloak.login();
-      return; // Stoppt die Funktion hier
+      return;
     }
 
-    // 2. Jetzt haben wir garantiert ein frisches Token!
     const authHeader = {
       'Authorization': `Bearer ${keycloak.token}`
     }
@@ -48,7 +56,6 @@ const loadData = async () => {
       transactions.value = await transRes.json()
       categories.value = await catRes.json()
     } else if (transRes.status === 401 || catRes.status === 401) {
-      // Zur absoluten Sicherheit: Falls das Backend trotzdem meckert
       keycloak.login()
     } else {
       console.error("Server antwortete mit Fehler:", transRes.status)
@@ -179,7 +186,9 @@ const chartOptions = {
   <div class="dashboard">
     <header class="dashboard-header">
       <div class="header-titles">
-        <h2><LayoutDashboard class="icon-title" :size="28" /> {{ t('dashboard.welcomeTitle') }}</h2>
+        <h2><LayoutDashboard class="icon-title" :size="28" />
+          {{ t('dashboard.welcomeTitle', { name: userName }) }}
+        </h2>
         <p class="subtitle">{{ t('dashboard.welcomeSubtitle') }}</p>
       </div>
 

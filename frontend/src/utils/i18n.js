@@ -5,7 +5,7 @@ export const currentLocale = ref('de')
 const dictionaries = {
     en: {
         dashboard: {
-            welcomeTitle: "Welcome back!",
+            welcomeTitle: "Welcome back, {name}!",
             welcomeSubtitle: "Here is your financial overview.",
             newTransaction: "New Transaction",
             currentBalance: "Current Balance",
@@ -48,6 +48,9 @@ const dictionaries = {
             subtitle: "Manage your income and expenses.",
             search: "Search description...",
             allTypes: "All Types",
+            allCategories: "All Categories",
+            allMonths: "All Months",
+            allYears: "All Years",
             edit: "Edit",
             delete: "Delete",
             confirmDelete: "Are you sure you want to delete this transaction?"
@@ -86,7 +89,7 @@ const dictionaries = {
     },
     de: {
         dashboard: {
-            welcomeTitle: "Willkommen zurück!",
+            welcomeTitle: "Willkommen zurück, {name}!",
             welcomeSubtitle: "Hier ist dein finanzieller Überblick.",
             newTransaction: "Neue Transaktion",
             currentBalance: "Übersicht",
@@ -129,6 +132,9 @@ const dictionaries = {
             subtitle: "Verwalte deine Einnahmen und Ausgaben.",
             search: "Beschreibung suchen...",
             allTypes: "Alle Typen",
+            allCategories: "Alle Kategorien",
+            allMonths: "Alle Monate",
+            allYears: "Alles Jahre",
             edit: "Bearbeiten",
             delete: "Löschen",
             confirmDelete: "Möchtest du diese Transaktion wirklich löschen?"
@@ -167,7 +173,7 @@ const dictionaries = {
     }
 }
 
-export const t = (path) => {
+export const t = (path, variables = {}) => {
     const keys = path.split('.')
     let result = dictionaries[currentLocale.value]
 
@@ -177,5 +183,10 @@ export const t = (path) => {
         }
         result = result[key]
     }
+
+    Object.keys(variables).forEach(key => {
+        result = result.replace(`{${key}}`, variables[key])
+    })
+
     return result
 }

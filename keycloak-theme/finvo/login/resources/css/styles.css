@@ -1,0 +1,196 @@
+html, body {
+    background-color: #f8fafc !important;
+    background-image: none !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+}
+
+body {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px 20px !important;
+    box-sizing: border-box !important;
+}
+
+.login-pf-page {
+    background: none !important;
+    width: 100% !important;
+}
+
+.login-pf-page .card-pf {
+    background: #ffffff !important;
+    border-radius: 24px !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.04) !important;
+    padding: 50px 40px !important;
+    max-width: 460px !important;
+    width: 100% !important;
+    border: none !important;
+    margin: auto !important;
+}
+
+#kc-header,
+#kc-header-wrapper,
+.login-pf-page-header {
+    display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+#kc-page-title {
+    font-size: 0 !important;
+    text-align: center !important;
+    margin-bottom: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+#kc-page-title::before {
+    content: 'Finvo';
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    color: #1e293b !important;
+    letter-spacing: -0.5px !important;
+}
+
+#kc-page-title::after {
+    content: 'Willkommen bei Finvo';
+    font-size: 1rem !important;
+    font-weight: 400 !important;
+    color: #64748b !important;
+}
+
+/* --- 5. Labels & Sternchen (Pflichtfelder) --- */
+label {
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    display: inline-block !important;
+    margin-bottom: 8px !important;
+}
+
+.pf-c-form__label-required,
+span.required {
+    display: inline-block !important;
+    color: #10b981 !important;
+    margin-left: 4px !important;
+    font-size: 1.2rem !important;
+    line-height: 0.5 !important;
+    vertical-align: middle !important;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    border-radius: 12px !important;
+    border: 2px solid #e2e8f0 !important;
+    padding: 16px !important;
+    font-size: 1.05rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 24px !important;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    transition: all 0.2s ease !important;
+    display: block !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #10b981 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
+}
+
+.pf-c-input-group {
+    display: flex !important;
+    width: 100% !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    margin-bottom: 24px !important;
+    overflow: hidden !important;
+    background: #ffffff !important;
+    transition: all 0.2s ease !important;
+}
+
+.pf-c-input-group:focus-within {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15) !important;
+}
+
+.pf-c-input-group input[type="password"] {
+    border: none !important;
+    padding: 16px !important;
+    font-size: 1.05rem !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    outline: none !important;
+    color: #1e293b !important;
+    margin-bottom: 0 !important;
+}
+
+.pf-c-button.pf-m-control {
+    background: transparent !important;
+    border: none !important;
+    color: #94a3b8 !important;
+    padding: 0 16px !important;
+    cursor: pointer !important;
+}
+
+.pf-c-button.pf-m-control:hover {
+    color: #10b981 !important;
+}
+
+.login-pf-page a {
+    color: #10b981 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    transition: color 0.2s !important;
+}
+
+.login-pf-page a:hover {
+    color: #059669 !important;
+    text-decoration: underline !important;
+}
+
+
+#kc-form-options {
+    text-align: center !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
+}
+
+#kc-registration {
+    text-align: center !important;
+    width: 100% !important;
+    margin-top: 24px !important;
+}
+
+input[type="submit"],
+.pf-c-button.pf-m-primary {
+    background-color: #10b981 !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    margin-top: 0 !important;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s !important;
+}
+
+input[type="submit"]:hover,
+.pf-c-button.pf-m-primary:hover {
+    background-color: #059669 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25) !important;
+}

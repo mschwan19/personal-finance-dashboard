@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t } from '../utils/i18n'
-import keycloak from '../utils/keycloak' // WICHTIG: Keycloak importiert
+import keycloak from '../utils/keycloak'
 
 const props = defineProps({
   editData: {
@@ -86,7 +86,7 @@ const submitTransaction = async () => {
       method: isEdit ? 'PUT' : 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${keycloak.token}` // Hier ist der Türöffner!
+        'Authorization': `Bearer ${keycloak.token}`
       },
       body: JSON.stringify(formData.value)
     })

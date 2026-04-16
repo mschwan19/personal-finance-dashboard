@@ -163,7 +163,7 @@ const formatCurrency = (value) => {
         </select>
 
         <select v-model="selectedCategory" class="filter-select">
-          <option value="ALL">Alle Kategorien</option>
+          <option value="ALL">{{ t('transactions.allCategories') || 'Alle Kategorien' }}</option>
           <option
               v-for="cat in categories"
               :key="cat.id"
@@ -175,14 +175,14 @@ const formatCurrency = (value) => {
         </select>
 
         <select v-model="selectedMonth" class="filter-select">
-          <option value="ALL">Alle Monate</option>
+          <option value="ALL">{{ t('transactions.allMonths') || 'Alle Monate' }}</option>
           <option v-for="month in availableMonths" :key="month.value" :value="month.value">
             {{ month.label }}
           </option>
         </select>
 
         <select v-model="selectedYear" class="filter-select">
-          <option value="ALL">Alle Jahre</option>
+          <option value="ALL">{{ t('transactions.allYears') || 'Alle Jahre' }}</option>
           <option v-for="year in availableYears" :key="year" :value="year">
             {{ year }}
           </option>
@@ -241,7 +241,6 @@ const formatCurrency = (value) => {
 </template>
 
 <style scoped>
-/* --- HEADER --- */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 .header-titles h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 5px 0; color: var(--text-main); font-size: 2rem; }
 .icon-title { color: var(--primary); }
@@ -250,27 +249,22 @@ const formatCurrency = (value) => {
 .add-btn { display: flex; align-items: center; gap: 8px; background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2); transition: transform 0.2s, background-color 0.2s; }
 .add-btn:hover { background-color: var(--primary-dark); transform: translateY(-2px); }
 
-/* --- CONTENT BOX BASE --- */
 .content-box { background-color: var(--white); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); margin-bottom: 20px; }
 
-/* --- FILTER SECTION --- */
 .filter-section { display: flex; flex-direction: column; gap: 15px; padding: 20px 25px; }
 
-/* Suchleiste */
 .search-wrapper { position: relative; display: flex; align-items: center; }
 .search-icon { position: absolute; left: 15px; color: var(--text-muted); }
 .search-input { width: 100%; padding: 14px 15px 14px 45px; border: 1px solid #e2e8f0; border-radius: var(--radius-md); font-family: inherit; font-size: 1rem; background-color: var(--bg-hover); color: var(--text-main); transition: all 0.3s; outline: none; }
 :root.dark-mode .search-input { border-color: #334155; }
 .search-input:focus { border-color: var(--primary); background-color: transparent; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
 
-/* Detail Filter (Dropdowns) */
 .detail-filters { display: flex; gap: 10px; flex-wrap: wrap; }
 
 .filter-select { flex: 1; min-width: 150px; appearance: none; -webkit-appearance: none; padding: 12px 35px 12px 15px; border: 1px solid #e2e8f0; border-radius: var(--radius-md); font-family: inherit; font-size: 0.95rem; background-color: transparent; color: var(--text-main); cursor: pointer; outline: none; transition: border-color 0.2s; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 14px; }
 :root.dark-mode .filter-select { border-color: #334155; }
 .filter-select:focus { border-color: var(--primary); }
 
-/* --- LISTE --- */
 .transaction-list { list-style: none; padding: 0; margin: 0; }
 .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: var(--radius-md); margin-bottom: 10px; transition: background-color 0.2s; }
 .transaction-item:hover { background-color: var(--bg-hover); }

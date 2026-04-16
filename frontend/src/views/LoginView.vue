@@ -8,7 +8,6 @@ const handleLogin = () => {
 };
 
 const handleRegister = () => {
-  // Leitet direkt zur Registrierungs-Maske von Keycloak
   keycloak.register({ redirectUri: window.location.origin + '/' });
 };
 
