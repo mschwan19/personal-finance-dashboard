@@ -15,8 +15,10 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:24.0
     container_name: finvo-auth
-    command: start --optimized
+    command: start
     environment:
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/finvo_db
       KC_DB_USERNAME: ${DB_USER}
@@ -49,6 +51,20 @@ services:
   frontend:
     build: ./frontend
     container_name: finvo-ui
+    networks:
+      - finvo-network
+
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: finvo-proxy
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    volumes:
+      - ./npm-data:/data
+      - ./npm-letsencrypt:/etc/letsencrypt
     networks:
       - finvo-network
 
