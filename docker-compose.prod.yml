@@ -54,6 +54,18 @@ services:
     networks:
       - finvo-network
 
+  adminer:
+    image: adminer:latest
+    container_name: finvo-adminer
+    restart: unless-stopped
+    environment:
+      # Das hilft Adminer, die DB im Docker-Netzwerk sofort zu finden
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    networks:
+      - finvo-network
+
   nginx-proxy-manager:
     image: 'jc21/nginx-proxy-manager:latest'
     container_name: finvo-proxy
