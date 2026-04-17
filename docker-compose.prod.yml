@@ -59,7 +59,6 @@ services:
     container_name: finvo-adminer
     restart: unless-stopped
     environment:
-      # Das hilft Adminer, die DB im Docker-Netzwerk sofort zu finden
       ADMINER_DEFAULT_SERVER: postgres
     depends_on:
       - postgres
