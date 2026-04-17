@@ -1,0 +1,77 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: finvo-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: finvo_db
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - finvo-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0
+    container_name: finvo-auth
+    command: start --optimized
+    restart: unless-stopped
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/finvo_db
+      KC_DB_USERNAME: ${DB_USER}
+      KC_DB_PASSWORD: ${DB_PASSWORD}
+      KC_HOSTNAME: auth.personal-finance-tracker.de
+      KC_PROXY: edge
+      KEYCLOAK_ADMIN: ${KC_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_ADMIN_PASSWORD}
+    volumes:
+      - ./keycloak-theme:/opt/keycloak/themes:ro
+    depends_on:
+      - postgres
+    networks:
+      - finvo-network
+
+  backend:
+    build: ./backend
+    container_name: finvo-api
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/finvo_db
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      JWT_ISSUER_URI: https://auth.personal-finance-tracker.de/realms/finvo
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://finvo-auth:8080/realms/finvo/protocol/openid-connect/certs
+    depends_on:
+      - postgres
+    networks:
+      - finvo-network
+
+  frontend:
+    build: ./frontend
+    container_name: finvo-ui
+    restart: unless-stopped
+    networks:
+      - finvo-network
+
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: finvo-proxy
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+      - '81:81'
+    volumes:
+      - ./npm-data:/data
+      - ./npm-letsencrypt:/etc/letsencrypt
+    networks:
+      - finvo-network
+
+networks:
+  finvo-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

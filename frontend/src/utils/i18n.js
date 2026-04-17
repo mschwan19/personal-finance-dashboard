@@ -26,7 +26,9 @@ const dictionaries = {
             SALARY: "Salary", GIFTS: "Gifts", REFUNDS: "Refunds",
             HOUSING: "Housing & Utilities", GROCERIES: "Groceries",
             LEISURE: "Leisure", MOBILITY: "Mobility",
-            SHOPPING: "Shopping", INVESTMENTS: "Investments"
+            SHOPPING: "Shopping", INVESTMENTS: "Investments",
+            EDUCATION: "School & Uni",
+            HEALTH: "Health",
         },
         types: {
             INCOME: "Income",
@@ -114,7 +116,9 @@ const dictionaries = {
             SALARY: "Gehalt", GIFTS: "Geschenke", REFUNDS: "Rückerstattungen",
             HOUSING: "Wohnen & Fixkosten", GROCERIES: "Lebensmittel",
             LEISURE: "Freizeit", MOBILITY: "Mobilität",
-            SHOPPING: "Shopping", INVESTMENTS: "Sparen & Investments"
+            SHOPPING: "Shopping", INVESTMENTS: "Sparen & Investments",
+            EDUCATION: "Schule & Studium",
+            HEALTH: "Gesundheit",
         },
         types: {
             INCOME: "Einnahme",

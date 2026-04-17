@@ -1,7 +1,7 @@
 import Keycloak from 'keycloak-js';
 
 const keycloakConfig = {
-    url: 'http://localhost:8081',
+    url: import.meta.env.VITE_KEYCLOAK_URL || 'http://localhost:8081',
     realm: 'finvo',
     clientId: 'finvo-vue'
 };

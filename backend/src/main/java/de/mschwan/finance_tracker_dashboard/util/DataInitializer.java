@@ -16,6 +16,8 @@ public class DataInitializer implements CommandLineRunner {
   private static final String COLOR_MOBILITY = "#2196F3";
   private static final String COLOR_SHOPPING = "#E91E63";
   private static final String COLOR_INVESTMENT = "#00BCD4";
+  private static final String COLOR_EDUCATION = "#FFC107";
+  private static final String COLOR_HEALTH = "#8BC34A";
 
   private final CategoryRepository categoryRepository;
 
@@ -38,6 +40,8 @@ public class DataInitializer implements CommandLineRunner {
       createCategory("MOBILITY", CategoryType.EXPENSE, COLOR_MOBILITY);
       createCategory("SHOPPING", CategoryType.EXPENSE, COLOR_SHOPPING);
       createCategory("INVESTMENTS", CategoryType.EXPENSE, COLOR_INVESTMENT);
+      createCategory("EDUCATION", CategoryType.EXPENSE, COLOR_EDUCATION);
+      createCategory("HEALTH", CategoryType.EXPENSE, COLOR_HEALTH);
     }
   }
 
