@@ -35,3 +35,7 @@ build/
 ### Mac Systemdateien ###
 .DS_Store
 **/.DS_Store
+
+### Security ###
+.env
+.env.production
