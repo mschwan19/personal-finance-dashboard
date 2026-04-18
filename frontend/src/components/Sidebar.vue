@@ -1,10 +1,31 @@
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import { t } from '../utils/i18n'
-// User-Icon hinzugefügt
-import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet, User } from 'lucide-vue-next'
+import { LayoutDashboard, ArrowRightLeft, Settings, LogOut, Wallet, User, Menu } from 'lucide-vue-next'
 import keycloak from '../utils/keycloak'
 
-// Öffnet die von Keycloak vorgefertigte Account-Management-Seite
+const isCollapsed = ref(false)
+
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value
+}
+
+const handleResize = () => {
+  if (window.innerWidth <= 1040) {
+    isCollapsed.value = true
+  } else {
+    isCollapsed.value = false
+  }
+}
+onMounted(() => {
+  handleResize()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
 const openProfile = () => {
   if (keycloak.authenticated) {
     keycloak.accountManagement()
@@ -17,37 +38,43 @@ const logout = () => {
 </script>
 
 <template>
-  <aside class="sidebar">
-    <div class="logo">
-      <h2><Wallet class="logo-icon" :size="24" /> Finvo</h2>
+  <aside :class="['sidebar', { 'collapsed': isCollapsed }]">
+    <div class="header-section">
+      <div class="logo">
+        <Wallet v-if="!isCollapsed" class="logo-icon icon-fixed" :size="24" />
+        <h2 class="brand-name">Finvo</h2>
+      </div>
+      <button class="toggle-btn" @click="toggleSidebar">
+        <Menu class="icon-fixed" :size="20" />
+      </button>
     </div>
 
     <nav class="menu">
-      <router-link to="/" class="nav-item">
-        <LayoutDashboard :size="20" />
-        <span>{{ t('dashboard.currentBalance') }}</span>
+      <router-link to="/" class="nav-item" :title="isCollapsed ? t('dashboard.currentBalance') : ''">
+        <LayoutDashboard class="icon-fixed" :size="20" />
+        <span v-if="!isCollapsed">{{ t('dashboard.currentBalance') }}</span>
       </router-link>
 
-      <router-link to="/transactions" class="nav-item">
-        <ArrowRightLeft :size="20" />
-        <span>{{ t('dashboard.recentMovements') }}</span>
+      <router-link to="/transactions" class="nav-item" :title="isCollapsed ? t('dashboard.recentMovements') : ''">
+        <ArrowRightLeft class="icon-fixed" :size="20" />
+        <span v-if="!isCollapsed">{{ t('dashboard.recentMovements') }}</span>
       </router-link>
 
-      <router-link to="/settings" class="nav-item">
-        <Settings :size="20" />
-        <span>{{ t('settings.title') }}</span>
+      <router-link to="/settings" class="nav-item" :title="isCollapsed ? t('settings.title') : ''">
+        <Settings class="icon-fixed" :size="20" />
+        <span v-if="!isCollapsed">{{ t('settings.title') }}</span>
       </router-link>
 
-      <button @click="openProfile" class="nav-item">
-        <User :size="20" />
-        <span>{{ t('sidebar.profile') }}</span>
+      <button @click="openProfile" class="nav-item" :title="isCollapsed ? t('sidebar.profile') : ''">
+        <User class="icon-fixed" :size="20" />
+        <span v-if="!isCollapsed">{{ t('sidebar.profile') }}</span>
       </button>
 
       <div class="divider"></div>
 
-      <button @click="logout" class="nav-item logout-btn">
-        <LogOut :size="20" />
-        <span>{{ t('sidebar.logout') }}</span>
+      <button @click="logout" class="nav-item logout-btn" :title="isCollapsed ? t('sidebar.logout') : ''">
+        <LogOut class="icon-fixed" :size="20" />
+        <span v-if="!isCollapsed">{{ t('sidebar.logout') }}</span>
       </button>
     </nav>
   </aside>
@@ -62,19 +89,72 @@ const logout = () => {
   flex-direction: column;
   box-shadow: 4px 0 15px rgba(0,0,0,0.03);
   height: 100vh;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: sticky;
+  top: 0;
+  overflow: hidden;
 }
 
-.logo h2 {
+.sidebar.collapsed {
+  width: 85px;
+  padding: 30px 10px; /* Padding etwas reduziert für den Text */
+}
+
+.icon-fixed {
+  flex-shrink: 0;
+  min-width: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.header-section {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 0 0 40px 10px;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding: 0 10px;
+}
+
+.collapsed .header-section {
+  flex-direction: column;
+  gap: 15px;
+  padding: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   color: var(--text-main);
+}
+
+.brand-name {
+  margin: 0;
   font-size: 1.4rem;
+  font-weight: 800;
+  white-space: nowrap;
+  transition: font-size 0.2s;
+}
+
+/* Wenn eingeklappt, Schrift etwas kleiner machen damit sie in die 85px passt */
+.collapsed .brand-name {
+  font-size: 1.1rem;
 }
 
 .logo-icon {
   color: var(--primary);
+}
+
+.toggle-btn {
+  background: var(--bg-hover);
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu {
@@ -95,16 +175,21 @@ const logout = () => {
   text-align: left;
   cursor: pointer;
   font-size: 0.95rem;
-
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+  white-space: nowrap;
+}
+
+.collapsed .nav-item {
+  padding: 12px;
+  justify-content: center;
+  gap: 0;
 }
 
 .nav-item:hover {
   background-color: var(--bg-hover);
   color: var(--text-main);
-  transform: translateX(4px);
 }
 
 .router-link-active {
@@ -118,20 +203,11 @@ const logout = () => {
   margin: 15px 10px;
 }
 
-:root.dark-mode .divider {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
 .logout-btn {
   color: #ef4444;
 }
 
 .logout-btn:hover {
   background-color: #fef2f2;
-  color: #dc2626;
-}
-
-:root.dark-mode .logout-btn:hover {
-  background-color: rgba(239, 68, 68, 0.1);
 }
 </style>
