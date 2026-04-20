@@ -211,4 +211,11 @@ const logout = () => {
 .logout-btn:hover {
   background-color: #fef2f2;
 }
+
+@media (max-width: 768px) {
+  .sidebar.collapsed {
+    width: 65px;
+    padding: 20px 8px;
+  }
+}
 </style>
