@@ -65,7 +65,12 @@ const dictionaries = {
             appearance: "Appearance",
             themeDesc: "Choose between light and dark mode:",
             lightMode: "Light Mode",
-            darkMode: "Dark Mode"
+            darkMode: "Dark Mode",
+            startingBalance: "Starting Balance",
+            balanceDesc: "Enter your current bank account balance.",
+            save: "Save",
+            saving: "Saving...",
+            balanceSaved: "Starting balance saved successfully!"
         },
         sidebar: {
             profile: "Profile",
@@ -155,7 +160,12 @@ const dictionaries = {
             appearance: "Erscheinungsbild",
             themeDesc: "Wähle zwischen hellem und dunklem Design:",
             lightMode: "Heller Modus",
-            darkMode: "Dunkler Modus"
+            darkMode: "Dunkler Modus",
+            startingBalance: "Startguthaben",
+            balanceDesc: "Trage hier den aktuellen Stand deines Bankkontos ein.",
+            save: "Speichern",
+            saving: "Speichert...",
+            balanceSaved: "Startguthaben erfolgreich gespeichert!"
         },
         sidebar: {
             profile: "Profil",

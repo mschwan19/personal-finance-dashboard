@@ -14,6 +14,7 @@ const transactions = ref([])
 const categories = ref([])
 const isLoading = ref(true)
 const showModal = ref(false)
+const initialBalance = ref(0)
 
 const userName = computed(() => {
   if (!keycloak.tokenParsed) return ''
@@ -27,12 +28,14 @@ const userName = computed(() => {
 const loadData = async () => {
   isLoading.value = true
   try {
-    const [transRes, catRes] = await Promise.all([
+    const [transRes, catRes, balanceRes] = await Promise.all([
       api.get('/transactions'),
-      api.get('/categories')
+      api.get('/categories'),
+      api.get('/settings/balance')
     ])
     transactions.value = transRes.data
     categories.value = catRes.data
+    initialBalance.value = balanceRes.data
   } catch (error) {
     console.error("Netzwerk- oder Serverfehler:", error)
   } finally {
@@ -90,7 +93,9 @@ const totalExpense = computed(() => {
       .reduce((sum, t) => sum + t.amount, 0)
 })
 
-const balance = computed(() => totalIncome.value - totalExpense.value)
+const balance = computed(() => {
+  return initialBalance.value + totalIncome.value - totalExpense.value
+})
 
 const recentTransactions = computed(() => {
   return [...filteredTransactions.value]
