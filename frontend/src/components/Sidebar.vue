@@ -93,6 +93,8 @@ const logout = () => {
   position: sticky;
   top: 0;
   overflow: hidden;
+  flex-shrink: 0;
+  z-index: 100;
 }
 
 .sidebar.collapsed {

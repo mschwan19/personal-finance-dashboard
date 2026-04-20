@@ -269,4 +269,46 @@ const formatCurrency = (value) => {
   align-items: center;
   gap: 2px;
 }
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .header-titles h2 {
+    font-size: 1.5rem;
+  }
+  .add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-section {
+    padding: 15px;
+  }
+
+  .detail-filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .t-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .detail-filters {
+    grid-template-columns: 1fr;
+  }
+}
 </style>

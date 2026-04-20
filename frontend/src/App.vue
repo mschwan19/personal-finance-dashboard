@@ -58,4 +58,16 @@ const showSidebar = computed(() => route.name !== 'login')
   max-width: 400px;
   min-height: auto;
 }
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .content-card {
+    padding: 15px;
+    border-radius: 12px;
+    overflow-x: hidden;
+  }
+}
 </style>

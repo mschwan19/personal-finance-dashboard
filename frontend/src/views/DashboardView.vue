@@ -277,9 +277,7 @@ const chartOptions = {
 .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
 .kpi-card { background-color: var(--bg-gray); padding: 25px; border-radius: var(--radius-lg); display: flex; align-items: center; gap: 15px; }
 
-/* Standard: Grün */
 .kpi-card.balance { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; flex-direction: column; align-items: flex-start; gap: 10px; transition: background 0.3s ease; }
-/* NEU: Rot, wenn im Minus */
 .kpi-card.balance.is-negative { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 
 .kpi-card.balance h3 { color: rgba(255, 255, 255, 0.8); margin:0;}
@@ -312,7 +310,6 @@ const chartOptions = {
 .chart-container { position: relative; height: 250px; width: 100%; }
 .empty-state { padding: 30px; text-align: center; color: var(--text-muted); }
 
-/* --- NEU: Flex-Klassen für das Euro Icon --- */
 .flex-amount {
   display: flex;
   align-items: center;
@@ -323,5 +320,33 @@ const chartOptions = {
   display: flex;
   align-items: center;
   gap: 2px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .header-titles h2 {
+    font-size: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .content-box {
+    padding: 15px;
+  }
 }
 </style>

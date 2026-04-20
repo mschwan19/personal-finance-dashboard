@@ -131,4 +131,16 @@ const submitTransaction = async () => {
 .submit-btn { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background-color 0.2s; }
 .submit-btn:hover { background-color: var(--primary-dark); }
 .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 15px;
+    align-items: flex-end;
+  }
+
+  .modal-card {
+    margin-bottom: 20px;
+    border-radius: 20px;
+  }
+}
 </style>

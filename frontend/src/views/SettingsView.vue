@@ -134,4 +134,22 @@ const setTheme = (isDark) => {
   background-color: var(--primary);
   color: white;
 }
+
+@media (max-width: 768px) {
+  .settings-header {
+    margin-bottom: 20px;
+  }
+  .header-titles h2 {
+    font-size: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .action-btn {
+    width: 100%;
+  }
+}
 </style>
