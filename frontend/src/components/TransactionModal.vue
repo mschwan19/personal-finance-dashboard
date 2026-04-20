@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { t } from '../utils/i18n'
-import api from '../utils/axios' // NEU: Unser Axios Postbote
+import api from '../utils/axios'
 
 const props = defineProps({
   editData: {

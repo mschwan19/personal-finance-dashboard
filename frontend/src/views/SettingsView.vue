@@ -1,7 +1,6 @@
 <script setup>
 import { currentLocale, t } from '../utils/i18n'
 import { isDarkMode } from '../utils/theme'
-// Importiere die passenden Icons für die Settings
 import { Settings, Globe, Palette, Sun, Moon } from 'lucide-vue-next'
 
 const setLanguage = (lang) => {
@@ -106,7 +105,7 @@ const setTheme = (isDark) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Sorgt für perfekten Abstand zwischen Icon/Flagge und Text */
+  gap: 8px;
   padding: 12px 24px;
   border: 2px solid #e2e8f0;
   background-color: transparent;

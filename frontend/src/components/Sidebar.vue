@@ -97,7 +97,7 @@ const logout = () => {
 
 .sidebar.collapsed {
   width: 85px;
-  padding: 30px 10px; /* Padding etwas reduziert für den Text */
+  padding: 30px 10px;
 }
 
 .icon-fixed {
@@ -136,7 +136,6 @@ const logout = () => {
   transition: font-size 0.2s;
 }
 
-/* Wenn eingeklappt, Schrift etwas kleiner machen damit sie in die 85px passt */
 .collapsed .brand-name {
   font-size: 1.1rem;
 }

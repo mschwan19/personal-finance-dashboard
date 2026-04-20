@@ -11,6 +11,8 @@ const keycloak = new Keycloak(keycloakConfig);
 export const initKeycloak = () => {
     return keycloak.init({
         onLoad: 'check-sso',
+        checkLoginIframe: false,
+        pkceMethod: 'S256'
     });
 };
 

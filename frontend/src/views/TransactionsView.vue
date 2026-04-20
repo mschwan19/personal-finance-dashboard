@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import { t, currentLocale } from '../utils/i18n'
 import TransactionModal from '../components/TransactionModal.vue'
 import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro } from 'lucide-vue-next'
-import api from '../utils/axios' // NEU: Unser Axios Postbote
+import api from '../utils/axios'
 
 const transactions = ref([])
 const categories = ref([])
