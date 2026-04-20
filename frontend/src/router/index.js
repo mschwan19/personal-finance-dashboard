@@ -47,7 +47,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
 
         if (!keycloak.authenticated) {
-            keycloak.login({ redirectUri: window.location.origin + to.fullPath })
+            keycloak.login()
         } else {
             next()
         }
