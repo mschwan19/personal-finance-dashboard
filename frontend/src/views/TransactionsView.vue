@@ -2,15 +2,18 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { t, currentLocale } from '../utils/i18n'
 import TransactionModal from '../components/TransactionModal.vue'
-import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { Search, Plus, Pencil, Trash2, ArrowRightLeft, Euro, ChevronLeft, ChevronRight, CalendarClock } from 'lucide-vue-next'
 import api from '../utils/axios'
 
 const transactions = ref([])
+const recurringTransactions = ref([])
 const categories = ref([])
 const isLoading = ref(true)
 
 const showModal = ref(false)
 const transactionToEdit = ref(null)
+
+const activeTab = ref('NORMAL')
 
 const searchQuery = ref('')
 const selectedType = ref('ALL')
@@ -24,12 +27,14 @@ const itemsPerPage = 10
 const loadData = async () => {
   isLoading.value = true
   try {
-    const [transRes, catRes] = await Promise.all([
+    const [transRes, catRes, recRes] = await Promise.all([
       api.get('/transactions'),
-      api.get('/categories')
+      api.get('/categories'),
+      api.get('/recurring')
     ])
     transactions.value = transRes.data
     categories.value = catRes.data
+    recurringTransactions.value = recRes.data
   } catch (error) {
     console.error("Fehler beim Laden:", error)
   } finally {
@@ -51,6 +56,16 @@ const deleteTransaction = async (id) => {
     loadData()
   } catch (error) {
     console.error("Fehler beim Löschen:", error)
+  }
+}
+
+const deleteRecurring = async (id) => {
+  if (!confirm(t('transactions.confirmDeleteRecurring') || 'Dauerauftrag wirklich beenden/löschen?')) return
+  try {
+    await api.delete(`/recurring/${id}`)
+    loadData()
+  } catch (error) {
+    console.error("Fehler beim Löschen des Dauerauftrags:", error)
   }
 }
 
@@ -123,7 +138,16 @@ const formatCurrency = (value) => {
       </button>
     </header>
 
-    <section class="filter-section content-box">
+    <div class="tabs-container">
+      <button :class="['tab-btn', { active: activeTab === 'NORMAL' }]" @click="activeTab = 'NORMAL'">
+        {{ t('transactions.normalTab') || 'Einmalige Zahlungen' }}
+      </button>
+      <button :class="['tab-btn', { active: activeTab === 'RECURRING' }]" @click="activeTab = 'RECURRING'">
+        <CalendarClock :size="16" /> {{ t('transactions.recurringTab') || 'Daueraufträge' }}
+      </button>
+    </div>
+
+    <section v-show="activeTab === 'NORMAL'" class="filter-section content-box">
       <div class="search-wrapper">
         <Search class="search-icon" :size="20" />
         <input type="text" v-model="searchQuery" :placeholder="t('transactions.search') || 'Suchen...'" class="search-input" />
@@ -154,56 +178,89 @@ const formatCurrency = (value) => {
 
     <div v-if="isLoading" class="loading-state">Lade Daten...</div>
 
-    <section v-else class="list-section content-box">
-      <div v-if="paginatedTransactions.length === 0" class="empty-state">
-        {{ t('dashboard.noTransactions') }}
-      </div>
+    <div v-else>
+      <section v-if="activeTab === 'NORMAL'" class="list-section content-box">
+        <div v-if="paginatedTransactions.length === 0" class="empty-state">
+          {{ t('dashboard.noTransactions') }}
+        </div>
 
-      <ul v-else class="transaction-list">
-        <li v-for="transaction in paginatedTransactions" :key="transaction.id" class="transaction-item">
-          <div class="t-left">
-            <span class="color-dot" :style="{ backgroundColor: transaction.categoryColorHex }"></span>
-            <div class="t-info">
-              <strong>{{ transaction.description }}</strong>
-              <span class="t-category">
-                {{ t(`categories.${transaction.categoryName}`) }} • {{ new Date(transaction.date).toLocaleDateString(currentLocale === 'de' ? 'de-DE' : 'en-US') }}
+        <ul v-else class="transaction-list">
+          <li v-for="transaction in paginatedTransactions" :key="transaction.id" class="transaction-item">
+            <div class="t-left">
+              <span class="color-dot" :style="{ backgroundColor: transaction.categoryColorHex }"></span>
+              <div class="t-info">
+                <strong>{{ transaction.description }}</strong>
+                <span class="t-category">
+                  {{ t(`categories.${transaction.categoryName}`) }} • {{ new Date(transaction.date).toLocaleDateString(currentLocale === 'de' ? 'de-DE' : 'en-US') }}
+                </span>
+              </div>
+            </div>
+            <div class="t-right">
+              <span :class="['t-amount flex-amount-small', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
+                {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }} <Euro :size="16" />
               </span>
+              <div class="t-actions">
+                <button @click="openEditModal(transaction)" class="action-btn edit"><Pencil :size="18" /></button>
+                <button @click="deleteTransaction(transaction.id)" class="action-btn delete"><Trash2 :size="18" /></button>
+              </div>
             </div>
-          </div>
-          <div class="t-right">
-            <span :class="['t-amount flex-amount-small', getCategoryType(transaction.categoryId) === 'INCOME' ? 'success' : 'danger']">
-              {{ getCategoryType(transaction.categoryId) === 'INCOME' ? '+' : '-' }} {{ formatCurrency(transaction.amount) }} <Euro :size="16" />
-            </span>
-            <div class="t-actions">
-              <button @click="openEditModal(transaction)" class="action-btn edit"><Pencil :size="18" /></button>
-              <button @click="deleteTransaction(transaction.id)" class="action-btn delete"><Trash2 :size="18" /></button>
+          </li>
+        </ul>
+
+        <div v-if="totalPages > 1" class="pagination">
+          <button class="page-btn" @click="prevPage" :disabled="currentPage === 1"><ChevronLeft :size="20" /></button>
+          <span class="page-info">Seite {{ currentPage }} von {{ totalPages }}</span>
+          <button class="page-btn" @click="nextPage" :disabled="currentPage === totalPages"><ChevronRight :size="20" /></button>
+        </div>
+      </section>
+
+      <section v-if="activeTab === 'RECURRING'" class="list-section content-box">
+        <div v-if="recurringTransactions.length === 0" class="empty-state">
+          {{ t('transactions.noRecurring') || 'Du hast noch keine Daueraufträge angelegt.' }}
+        </div>
+
+        <ul v-else class="transaction-list">
+          <li v-for="tx in recurringTransactions" :key="tx.id" class="transaction-item recurring-item">
+            <div class="t-left">
+              <div class="t-info">
+                <strong>{{ tx.description }}</strong>
+                <span class="t-category" style="color: var(--primary);">
+                  {{ tx.recurrenceInterval === 'MONTHLY' ? (t('modal.monthly') || 'Monatlich') : (t('modal.yearly') || 'Jährlich') }}
+                  • Nächste: {{ new Date(tx.nextExecutionDate).toLocaleDateString(currentLocale === 'de' ? 'de-DE' : 'en-US') }}
+                </span>
+              </div>
             </div>
-          </div>
-        </li>
-      </ul>
-
-      <div v-if="totalPages > 1" class="pagination">
-        <button class="page-btn" @click="prevPage" :disabled="currentPage === 1">
-          <ChevronLeft :size="20" />
-        </button>
-        <span class="page-info">Seite {{ currentPage }} von {{ totalPages }}</span>
-        <button class="page-btn" @click="nextPage" :disabled="currentPage === totalPages">
-          <ChevronRight :size="20" />
-        </button>
-      </div>
-
-    </section>
+            <div class="t-right">
+              <span :class="['t-amount flex-amount-small', tx.type === 'INCOME' ? 'success' : 'danger']">
+                {{ tx.type === 'INCOME' ? '+' : '-' }} {{ formatCurrency(tx.amount) }} <Euro :size="16" />
+              </span>
+              <div class="t-actions">
+                <button @click="deleteRecurring(tx.id)" class="action-btn delete" :title="t('transactions.cancelRecurring') || 'Dauerauftrag kündigen'">
+                  <Trash2 :size="18" />
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
 
     <TransactionModal v-if="showModal" :edit-data="transactionToEdit" @close="showModal = false; transactionToEdit = null" @saved="loadData" />
   </div>
 </template>
 
 <style scoped>
-.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .header-titles h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 5px 0; color: var(--text-main); font-size: 2rem; }
 .icon-title { color: var(--primary); }
 .subtitle { margin: 0; color: var(--text-muted); }
 .add-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+
+.tabs-container { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 10px; }
+:root.dark-mode .tabs-container { border-bottom-color: rgba(255,255,255,0.05); }
+.tab-btn { display: flex; align-items: center; gap: 8px; background: none; border: none; padding: 10px 20px; font-size: 1rem; font-weight: 600; color: var(--text-muted); cursor: pointer; border-radius: var(--radius-md); transition: all 0.2s; }
+.tab-btn:hover { background-color: var(--bg-hover); color: var(--text-main); }
+.tab-btn.active { background-color: var(--primary); color: white; }
 
 .content-box { background-color: var(--white); padding: 25px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); margin-bottom: 20px; }
 .filter-section { display: flex; flex-direction: column; gap: 15px; padding: 20px 25px; }
@@ -219,6 +276,8 @@ const formatCurrency = (value) => {
 .transaction-list { list-style: none; padding: 0; margin: 0; }
 .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-radius: var(--radius-md); margin-bottom: 10px; transition: background-color 0.2s; }
 .transaction-item:hover { background-color: var(--bg-hover); }
+.recurring-item { border-left: 4px solid var(--primary); }
+
 .t-left { display: flex; align-items: center; gap: 15px; }
 .color-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 .t-info { display: flex; flex-direction: column; gap: 4px; }
@@ -247,6 +306,22 @@ const formatCurrency = (value) => {
   .page-header { flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
   .header-titles h2 { font-size: 1.5rem; }
   .add-btn { width: 100%; }
+
+  .tabs-container {
+    flex-direction: row;
+    gap: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    justify-content: center;
+  }
+
   .filter-section { padding: 15px; }
   .detail-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .transaction-item { flex-direction: column; align-items: flex-start; gap: 10px; }

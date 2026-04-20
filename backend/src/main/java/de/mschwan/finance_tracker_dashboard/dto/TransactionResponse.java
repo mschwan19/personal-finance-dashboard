@@ -10,5 +10,5 @@ public record TransactionResponse(
         String description,
         Long categoryId,
         String categoryName,
-        String categoryColorHex // Super praktisch fürs Frontend!
+        String categoryColorHex
 ) {}

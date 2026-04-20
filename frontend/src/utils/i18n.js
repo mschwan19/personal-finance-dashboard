@@ -14,7 +14,10 @@ const dictionaries = {
             recentMovements: "Recent Movements",
             noTransactions: "No transactions yet.",
             expensesByCategory: "Expenses by Category",
-            noExpenses: "No expenses yet."
+            noExpenses: "No expenses yet.",
+            upcoming: "Upcoming Payments (30 Days)",
+            noUpcoming: "No upcoming payments.",
+            dueOn: "Due on"
         },
         filters: {
             all: "All Time",
@@ -43,7 +46,11 @@ const dictionaries = {
             category: "Category",
             select: "Please select...",
             save: "Save",
-            saving: "Saving..."
+            saving: "Saving...",
+            isRecurring: "Set as recurring transaction",
+            interval: "Interval",
+            monthly: "Monthly",
+            yearly: "Yearly"
         },
         transactions: {
             title: "Transactions",
@@ -55,7 +62,12 @@ const dictionaries = {
             allYears: "All Years",
             edit: "Edit",
             delete: "Delete",
-            confirmDelete: "Are you sure you want to delete this transaction?"
+            confirmDelete: "Are you sure you want to delete this transaction?",
+            confirmDeleteRecurring: "Do you really want to cancel this recurring payment? Future bookings will stop.",
+            normalTab: "One-time Payments",
+            recurringTab: "Recurring Payments",
+            noRecurring: "You haven't set up any recurring payments yet.",
+            cancelRecurring: "Cancel recurring payment"
         },
         settings: {
             title: "Settings",
@@ -109,7 +121,10 @@ const dictionaries = {
             recentMovements: "Letzte Bewegungen",
             noTransactions: "Noch keine Transaktionen vorhanden.",
             expensesByCategory: "Ausgaben nach Kategorie",
-            noExpenses: "Keine Ausgaben vorhanden."
+            noExpenses: "Keine Ausgaben vorhanden.",
+            upcoming: "Bevorstehende Zahlungen (30 Tage)",
+            noUpcoming: "Keine anstehenden Zahlungen.",
+            dueOn: "Fällig am"
         },
         filters: {
             all: "Gesamter Zeitraum",
@@ -138,7 +153,11 @@ const dictionaries = {
             category: "Kategorie",
             select: "Bitte wählen...",
             save: "Speichern",
-            saving: "Speichert..."
+            saving: "Speichert...",
+            isRecurring: "Als Dauerauftrag anlegen",
+            interval: "Wiederholung",
+            monthly: "Monatlich",
+            yearly: "Jährlich"
         },
         transactions: {
             title: "Transaktionen",
@@ -150,7 +169,12 @@ const dictionaries = {
             allYears: "Alles Jahre",
             edit: "Bearbeiten",
             delete: "Löschen",
-            confirmDelete: "Möchtest du diese Transaktion wirklich löschen?"
+            confirmDelete: "Möchtest du diese Transaktion wirklich löschen?",
+            confirmDeleteRecurring: "Möchtest du diesen Dauerauftrag wirklich beenden? Zukünftige Buchungen werden gestoppt.",
+            normalTab: "Einmalige Zahlungen",
+            recurringTab: "Daueraufträge",
+            noRecurring: "Du hast noch keine Daueraufträge angelegt.",
+            cancelRecurring: "Dauerauftrag kündigen"
         },
         settings: {
             title: "Einstellungen",

@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "transactions")
+@Table(name = "recurring_transactions")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Transaction {
+public class RecurringTransaction {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +22,21 @@ public class Transaction {
   private String userId;
 
   @Column(nullable = false)
-  private BigDecimal amount;
-
-  @Column(nullable = false)
-  private LocalDate date;
-
   private String description;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "category_id", nullable = false)
-  private Category category;
+  @Column(nullable = false)
+  private BigDecimal amount;
+
+  @Column(name = "category_id")
+  private Long categoryId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private CategoryType type;
+
+  @Column(nullable = false)
+  private String recurrenceInterval;
+
+  @Column(name = "next_execution_date", nullable = false)
+  private LocalDate nextExecutionDate;
 }

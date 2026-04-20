@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { t } from '../utils/i18n'
 import api from '../utils/axios'
 
@@ -14,12 +14,27 @@ const emit = defineEmits(['close', 'saved'])
 
 const categories = ref([])
 const isLoading = ref(false)
+const todayStr = new Date().toISOString().split('T')[0]
+const isRecurring = ref(false)
+const recurrenceInterval = ref('MONTHLY')
 
 const formData = ref({
   amount: null,
   date: new Date().toISOString().split('T')[0],
   description: '',
   categoryId: ''
+})
+
+watch(isRecurring, (newValue) => {
+  if (newValue === true && formData.value.date < todayStr) {
+    formData.value.date = todayStr
+  }
+})
+
+watch(() => formData.value.date, (newDate) => {
+  if (isRecurring.value && newDate < todayStr) {
+    formData.value.date = todayStr
+  }
 })
 
 onMounted(async () => {
@@ -44,12 +59,28 @@ const submitTransaction = async () => {
   isLoading.value = true
   try {
     const isEdit = !!props.editData
-    const url = isEdit ? `/transactions/${props.editData.id}` : '/transactions'
+
     if (isEdit) {
-      await api.put(url, formData.value)
+      await api.put(`/transactions/${props.editData.id}`, formData.value)
     } else {
-      await api.post(url, formData.value)
+      if (isRecurring.value) {
+        const selectedCat = categories.value.find(c => c.id === formData.value.categoryId)
+        const catType = selectedCat ? selectedCat.type : 'EXPENSE'
+
+        const recurringPayload = {
+          amount: formData.value.amount,
+          description: formData.value.description,
+          categoryId: formData.value.categoryId,
+          type: catType,
+          recurrenceInterval: recurrenceInterval.value,
+          nextExecutionDate: formData.value.date
+        }
+        await api.post('/recurring', recurringPayload)
+      } else {
+        await api.post('/transactions', formData.value)
+      }
     }
+
     emit('saved')
     emit('close')
   } catch (error) {
@@ -78,7 +109,12 @@ const submitTransaction = async () => {
 
           <div class="form-group">
             <label>{{ t('modal.date') }}</label>
-            <input type="date" v-model="formData.date" required />
+            <input
+                type="date"
+                v-model="formData.date"
+                :min="isRecurring ? todayStr : undefined"
+                required
+            />
           </div>
 
           <div class="form-group">
@@ -103,6 +139,23 @@ const submitTransaction = async () => {
             </select>
           </div>
 
+          <template v-if="!props.editData">
+            <div class="form-group checkbox-group">
+              <label class="checkbox-label">
+                <input type="checkbox" v-model="isRecurring" />
+                {{ t('modal.isRecurring') || 'Als Dauerauftrag anlegen' }}
+              </label>
+            </div>
+
+            <div v-if="isRecurring" class="form-group fade-in">
+              <label>{{ t('modal.interval') || 'Wiederholung' }}</label>
+              <select v-model="recurrenceInterval" required>
+                <option value="MONTHLY">{{ t('modal.monthly') || 'Monatlich' }}</option>
+                <option value="YEARLY">{{ t('modal.yearly') || 'Jährlich' }}</option>
+              </select>
+            </div>
+          </template>
+
           <button type="submit" class="submit-btn" :disabled="isLoading">
             {{ isLoading ? t('modal.saving') : t('modal.save') }}
           </button>
@@ -123,11 +176,10 @@ const submitTransaction = async () => {
   max-width: 450px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
   animation: slideUp 0.3s ease-out;
-  /* KORREKTUR: Das Modal darf nicht unendlich wachsen */
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Zwingt den Body zum Scrollen */
+  overflow: hidden;
 }
 
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -136,9 +188,9 @@ const submitTransaction = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 30px 15px 30px; /* Padding hier, nicht auf der Karte */
+  padding: 30px 30px 15px 30px;
   margin-bottom: 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.05); /* Kleine visuelle Trennung */
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 :root.dark-mode .modal-header { border-bottom-color: rgba(255,255,255,0.05); }
 
@@ -154,25 +206,24 @@ const submitTransaction = async () => {
 
 .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
 .form-group label { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
-.form-group input, .form-group select { padding: 12px; border: 1px solid #e2e8f0; border-radius: var(--radius-md); font-size: 1rem; font-family: inherit; background-color: var(--white); color: var(--text-main); transition: border-color 0.2s, background-color 0.3s; width: 100%; /* Wichtig auf Mobile */ }
+.form-group input, .form-group select { padding: 12px; border: 1px solid #e2e8f0; border-radius: var(--radius-md); font-size: 1rem; font-family: inherit; background-color: var(--white); color: var(--text-main); transition: border-color 0.2s, background-color 0.3s; width: 100%; }
 :root.dark-mode .form-group input, :root.dark-mode .form-group select { border-color: #334155; }
 .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--primary); }
+
+.checkbox-group { flex-direction: row; align-items: center; margin-top: 5px; margin-bottom: 20px;}
+.checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-main) !important; font-weight: normal !important; margin-bottom: 0 !important; }
+.checkbox-label input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+
+.fade-in { animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
 .submit-btn { width: 100%; padding: 14px; background-color: var(--primary); color: white; border: none; border-radius: var(--radius-md); font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background-color 0.2s; }
 .submit-btn:hover { background-color: var(--primary-dark); }
 .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
 @media (max-width: 768px) {
-  .modal-backdrop {
-    padding: 15px;
-    align-items: center;
-  }
-
-  .modal-card {
-    margin-bottom: 0px;
-    border-radius: 20px;
-    max-height: 85vh;
-  }
-
+  .modal-backdrop { padding: 15px; align-items: center; }
+  .modal-card { margin-bottom: 0px; border-radius: 20px; max-height: 85vh; }
   .modal-header { padding: 20px 20px 10px 20px; }
   .modal-body { padding: 0 20px 20px 20px; }
 }

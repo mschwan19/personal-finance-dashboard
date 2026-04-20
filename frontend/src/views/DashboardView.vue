@@ -4,7 +4,7 @@ import { t, currentLocale } from '../utils/i18n'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Pie } from 'vue-chartjs'
 import TransactionModal from '../components/TransactionModal.vue'
-import { LayoutDashboard, Plus, TrendingUp, TrendingDown, Euro } from 'lucide-vue-next'
+import { LayoutDashboard, Plus, TrendingUp, TrendingDown, Euro, CalendarClock } from 'lucide-vue-next'
 import keycloak from '../utils/keycloak'
 import api from '../utils/axios'
 
@@ -15,6 +15,7 @@ const categories = ref([])
 const isLoading = ref(true)
 const showModal = ref(false)
 const initialBalance = ref(0)
+const upcomingTransactions = ref([])
 
 const userName = computed(() => {
   if (!keycloak.tokenParsed) return ''
@@ -28,14 +29,16 @@ const userName = computed(() => {
 const loadData = async () => {
   isLoading.value = true
   try {
-    const [transRes, catRes, balanceRes] = await Promise.all([
+    const [transRes, catRes, balanceRes, upcomingRes] = await Promise.all([
       api.get('/transactions'),
       api.get('/categories'),
-      api.get('/settings/balance')
+      api.get('/settings/balance'),
+      api.get('/recurring/upcoming')
     ])
     transactions.value = transRes.data
     categories.value = catRes.data
     initialBalance.value = balanceRes.data
+    upcomingTransactions.value = upcomingRes.data
   } catch (error) {
     console.error("Netzwerk- oder Serverfehler:", error)
   } finally {
@@ -189,6 +192,33 @@ const chartOptions = {
         </div>
       </section>
 
+      <section class="upcoming-section content-box">
+        <h3 class="section-title-with-icon">
+          <CalendarClock :size="20" class="icon-title" />
+          {{ t('dashboard.upcoming') || 'Bevorstehende Zahlungen (30 Tage)' }}
+        </h3>
+        <div v-if="upcomingTransactions.length === 0" class="empty-state">
+          {{ t('dashboard.noUpcoming') || 'Keine anstehenden Zahlungen.' }}
+        </div>
+        <ul v-else class="transaction-list">
+          <li v-for="tx in upcomingTransactions" :key="tx.id" class="transaction-item">
+            <div class="t-left">
+              <div class="t-info">
+                <strong>{{ tx.description }}</strong>
+                <span class="t-date" style="color: var(--primary); font-weight: 600;">
+                  {{ t('dashboard.dueOn') }}: {{ new Date(tx.nextExecutionDate).toLocaleDateString(currentLocale === 'de' ? 'de-DE' : 'en-US') }}
+                </span>
+              </div>
+            </div>
+            <div class="t-right">
+              <span :class="['t-amount flex-amount-small', tx.type === 'INCOME' ? 'success' : 'danger']">
+                {{ tx.type === 'INCOME' ? '+' : '-' }} {{ formatCurrency(tx.amount) }} <Euro :size="16" />
+              </span>
+            </div>
+          </li>
+        </ul>
+      </section>
+
       <div class="content-grid">
         <section class="recent-section content-box">
           <h3>{{ t('dashboard.recentMovements') }}</h3>
@@ -250,10 +280,13 @@ const chartOptions = {
 .amount.danger { color: #ef4444; }
 .icon-wrapper { font-size: 2rem; background: var(--bg-gray); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
+.upcoming-section { margin-bottom: 30px; border-left: 4px solid var(--primary); }
+.section-title-with-icon { display: flex; align-items: center; gap: 8px; margin: 0 0 20px 0; color: var(--text-main); }
+
 .content-grid { display: grid; gap: 30px; grid-template-columns: 1fr; }
 @media (min-width: 1024px) { .content-grid { grid-template-columns: 1.5fr 1fr; } }
 .content-box { background-color: var(--bg-gray); padding: 25px; border-radius: var(--radius-lg); overflow: hidden; }
-.content-box h3 { margin: 0 0 20px 0; color: var(--text-main); }
+.content-box h3:not(.section-title-with-icon) { margin: 0 0 20px 0; color: var(--text-main); }
 .transaction-list { list-style: none; padding: 0; margin: 0; }
 .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
 :root.dark-mode .transaction-item { border-bottom-color: rgba(255, 255, 255, 0.05); }
@@ -272,7 +305,6 @@ const chartOptions = {
 .empty-state { padding: 30px; text-align: center; color: var(--text-muted); }
 .flex-amount { display: flex; align-items: center; gap: 4px; }
 .flex-amount-small { display: flex; align-items: center; gap: 2px; }
-
 
 @media (max-width: 768px) {
   .dashboard-header { flex-direction: column; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
