@@ -1,10 +1,11 @@
 package de.mschwan.finance_tracker_dashboard.controller;
 
 import de.mschwan.finance_tracker_dashboard.dto.CategoryResponse;
+import de.mschwan.finance_tracker_dashboard.model.Category;
 import de.mschwan.finance_tracker_dashboard.service.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +20,12 @@ public class CategoryController {
   }
 
   @GetMapping
-  public List<CategoryResponse> getAllCategories() {
-    return categoryService.getAllCategories();
+  public List<CategoryResponse> getAllCategories(@AuthenticationPrincipal Jwt jwt) {
+    return categoryService.getAllCategoriesForUser(jwt.getSubject());
+  }
+
+  @PostMapping
+  public CategoryResponse createPrivateCategory(@RequestBody Category request, @AuthenticationPrincipal Jwt jwt) {
+    return categoryService.createPrivateCategory(request, jwt.getSubject());
   }
 }

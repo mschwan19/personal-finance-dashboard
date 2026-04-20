@@ -23,4 +23,7 @@ public class Category {
   private CategoryType type;
 
   private String colorHex;
+
+  @Column(name = "user_id")
+  private String userId;
 }

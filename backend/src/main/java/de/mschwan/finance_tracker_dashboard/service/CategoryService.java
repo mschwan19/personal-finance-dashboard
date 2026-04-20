@@ -17,19 +17,15 @@ public class CategoryService {
     this.categoryRepository = categoryRepository;
   }
 
-  public List<CategoryResponse> getAllCategories() {
-    return categoryRepository.findAll()
-            .stream()
-            .map(this::mapToResponse)
-            .collect(Collectors.toList());
+  public List<CategoryResponse> getAllCategoriesForUser(String userId) {
+    return categoryRepository.findByUserIdOrUserIdIsNull(userId).stream()
+            .map(cat -> new CategoryResponse(cat.getId(), cat.getName(), cat.getType(), cat.getColorHex()))
+            .toList();
   }
 
-  private CategoryResponse mapToResponse(Category category) {
-    return new CategoryResponse(
-            category.getId(),
-            category.getName(),
-            category.getType(),
-            category.getColorHex()
-    );
+  public CategoryResponse createPrivateCategory(Category request, String userId) {
+    request.setUserId(userId);
+    Category saved = categoryRepository.save(request);
+    return new CategoryResponse(saved.getId(), saved.getName(), saved.getType(), saved.getColorHex());
   }
 }
