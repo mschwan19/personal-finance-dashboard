@@ -163,12 +163,12 @@ const submitTransaction = async () => {
 
 @media (max-width: 768px) {
   .modal-backdrop {
-    padding: 10px;
-    align-items: flex-end;
+    padding: 15px;
+    align-items: center;
   }
 
   .modal-card {
-    margin-bottom: 15px;
+    margin-bottom: 0px;
     border-radius: 20px;
     max-height: 85vh;
   }
