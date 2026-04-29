@@ -103,14 +103,12 @@ const toggleLanguage = () => {
 <style scoped>
 .login-wrapper { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: var(--bg-gray); display: flex; justify-content: center; align-items: center; z-index: 9999; }
 
-/* Styling für den Sprachwechsler */
 .lang-toggle { position: absolute; top: 20px; right: 20px; padding: 8px 16px; background-color: var(--white); border: 2px solid #e2e8f0; border-radius: 20px; cursor: pointer; font-weight: bold; color: var(--text-main); transition: all 0.2s; display: flex; align-items: center; gap: 5px; box-shadow: var(--shadow-soft); }
 :root.dark-mode .lang-toggle { background-color: var(--bg-gray); border-color: #334155; }
 .lang-toggle:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
 
 .login-card { background-color: var(--white); width: 100%; max-width: 450px; padding: 40px; border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); animation: fadeIn 0.4s ease-out; }
 
-/* NEU: Styles für die Brand-Zeile */
 .brand { text-align: center; margin-bottom: 30px; }
 .brand-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px; }
 .logo-circle { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); }

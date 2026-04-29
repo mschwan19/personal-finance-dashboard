@@ -12,4 +12,4 @@ watch(isDarkMode, (newVal) => {
         document.documentElement.classList.remove('dark-mode')
         localStorage.setItem('finance-theme', 'light')
     }
-}, { immediate: true }) // immediate: true führt das direkt beim Starten der App aus!
+}, { immediate: true })

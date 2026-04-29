@@ -5,11 +5,9 @@ import { isDarkMode } from '../utils/theme'
 import { Settings, Globe, Palette, Sun, Moon, Wallet, Save } from 'lucide-vue-next'
 import api from '../utils/axios'
 
-// --- Sprach- und Theme-Logik ---
 const setLanguage = (lang) => { currentLocale.value = lang }
 const setTheme = (isDark) => { isDarkMode.value = isDark }
 
-// --- NEU: Startguthaben-Logik ---
 const initialBalance = ref(0.00)
 const isSaving = ref(false)
 
@@ -26,7 +24,6 @@ const saveBalance = async () => {
   isSaving.value = true
   try {
     await api.put('/settings/balance', { initialBalance: initialBalance.value })
-    // Kleines visuelles Feedback (könnte man später durch ein Toast-Popup ersetzen)
     alert(t('settings.balanceSaved') || 'Startguthaben erfolgreich gespeichert!')
   } catch (error) {
     console.error("Fehler beim Speichern:", error)
@@ -94,7 +91,6 @@ onMounted(() => {
 </template>
 
 <style scoped>
-/* Dein bestehendes CSS für Settings bleibt hier... füge nur das NEUE für das Guthaben hinzu: */
 .settings-header { margin-bottom: 30px; }
 .header-titles h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 5px 0; color: var(--text-main); font-size: 2rem; }
 .icon-title { color: var(--primary); }
@@ -106,7 +102,6 @@ onMounted(() => {
 .section-icon { color: var(--text-muted); }
 .settings-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; }
 
-/* --- NEU: Styling für das Startguthaben-Formular --- */
 .balance-form { display: flex; gap: 15px; align-items: center; }
 .input-wrapper { position: relative; flex-grow: 1; display: flex; align-items: center; }
 .balance-input { width: 100%; padding: 12px 35px 12px 15px; border: 2px solid #e2e8f0; border-radius: var(--radius-md); font-size: 1.1rem; font-family: inherit; font-weight: bold; color: var(--text-main); background: transparent; outline: none; transition: border-color 0.2s; }
@@ -118,7 +113,6 @@ onMounted(() => {
 .save-btn:hover:not(:disabled) { background-color: var(--primary-dark); }
 .save-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-/* Bestehendes Styling für Theme/Language Buttons */
 .button-group { display: flex; gap: 15px; margin-top: 10px; }
 .action-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border: 2px solid #e2e8f0; background-color: transparent; border-radius: var(--radius-md); cursor: pointer; font-weight: bold; color: var(--text-muted); transition: all 0.2s; flex: 1; }
 .emoji-flag { font-size: 1.2rem; line-height: 1; }
@@ -131,7 +125,6 @@ onMounted(() => {
   .header-titles h2 { font-size: 1.5rem; }
   .button-group { flex-direction: column; gap: 10px; }
   .action-btn { width: 100%; }
-  /* NEU für Mobile */
   .balance-form { flex-direction: column; align-items: stretch; }
 }
 </style>
