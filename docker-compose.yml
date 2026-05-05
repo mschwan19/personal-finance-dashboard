@@ -43,6 +43,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_ISSUER_URI: https://auth.personal-finance-tracker.de/realms/finvo
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://finvo-auth:8080/realms/finvo/protocol/openid-connect/certs
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
     depends_on:
       - postgres
     networks:

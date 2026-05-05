@@ -1,5 +1,7 @@
 package de.mschwan.finance_tracker_dashboard.model;
 
+import de.mschwan.finance_tracker_dashboard.converter.BigDecimalCryptoConverter;
+import de.mschwan.finance_tracker_dashboard.converter.StringCryptoConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +23,15 @@ public class Transaction {
   @Column(name = "user_id", nullable = false)
   private String userId;
 
-  @Column(nullable = false)
+  @Convert(converter = BigDecimalCryptoConverter.class)
+  @Column(nullable = false, columnDefinition = "varchar(255)")
   private BigDecimal amount;
 
   @Column(nullable = false)
   private LocalDate date;
 
+  @Convert(converter = StringCryptoConverter.class)
+  @Column(columnDefinition = "varchar(255)")
   private String description;
 
   @ManyToOne(fetch = FetchType.LAZY)
