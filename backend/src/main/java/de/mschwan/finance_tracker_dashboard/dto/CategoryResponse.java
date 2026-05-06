@@ -6,5 +6,5 @@ public record CategoryResponse(
         Long id,
         String name,
         CategoryType type,
-        String colorHex
+        String color
 ) {}

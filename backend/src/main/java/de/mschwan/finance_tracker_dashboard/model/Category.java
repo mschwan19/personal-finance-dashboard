@@ -1,5 +1,6 @@
 package de.mschwan.finance_tracker_dashboard.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class Category {
   @Column(nullable = false)
   private CategoryType type;
 
+  @JsonProperty("color")
   private String colorHex;
 
   @Column(name = "user_id")

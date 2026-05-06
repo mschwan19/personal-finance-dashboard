@@ -37,6 +37,10 @@ const dictionaries = {
             INCOME: "Income",
             EXPENSE: "Expense"
         },
+        transaction: {
+            income: "Income",
+            expense: "Expense"
+        },
         modal: {
             title: "New Transaction",
             amount: "Amount (€)",
@@ -82,7 +86,16 @@ const dictionaries = {
             balanceDesc: "Enter your current bank account balance.",
             save: "Save",
             saving: "Saving...",
-            balanceSaved: "Starting balance saved successfully!"
+            german: "German",
+            english: "English",
+            balanceSaved: "Starting balance saved successfully!",
+            customCategories: "Custom Categories",
+            customCategoriesDesc: "Create custom categories for your income and expenses.",
+            noCustomCategories: "You haven't created any custom categories yet.",
+            categoryName: "Category Name",
+            delete: "Delete",
+            confirmDeleteCategory: "Are you sure you want to delete this category?",
+            categoryInUse: "Category could not be deleted. Are there transactions linked to it?"
         },
         sidebar: {
             profile: "Profile",
@@ -144,6 +157,10 @@ const dictionaries = {
             INCOME: "Einnahme",
             EXPENSE: "Ausgabe"
         },
+        transaction: {
+            income: "Einnahme",
+            expense: "Ausgabe"
+        },
         modal: {
             title: "Neue Transaktion",
             amount: "Betrag (€)",
@@ -189,7 +206,16 @@ const dictionaries = {
             balanceDesc: "Trage hier den aktuellen Stand deines Bankkontos ein.",
             save: "Speichern",
             saving: "Speichert...",
-            balanceSaved: "Startguthaben erfolgreich gespeichert!"
+            german:  "Deutsch",
+            english: "Englisch",
+            balanceSaved: "Startguthaben erfolgreich gespeichert!",
+            customCategories: "Eigene Kategorien",
+            customCategoriesDesc: "Erstelle eigene Kategorien für deine Einnahmen und Ausgaben.",
+            noCustomCategories: "Du hast noch keine eigenen Kategorien erstellt.",
+            categoryName: "Name der Kategorie",
+            delete: "Löschen",
+            confirmDeleteCategory: "Bist du sicher, dass du diese Kategorie löschen möchtest?",
+            categoryInUse: "Kategorie konnte nicht gelöscht werden. Sind noch Transaktionen damit verknüpft?"
         },
         sidebar: {
             profile: "Profil",
@@ -225,6 +251,9 @@ export const t = (path, variables = {}) => {
 
     for (const key of keys) {
         if (!result || result[key] === undefined) {
+            if (keys[0] === 'categories') {
+                return keys[keys.length - 1]
+            }
             return path
         }
         result = result[key]
