@@ -1,6 +1,6 @@
 # Personal Finance Dashboard 📊
 
-**Live Demo:** [https://personal-finance-tracker.de](https://personal-finance-tracker.de)
+**Website:** [https://personal-finance-tracker.de](https://personal-finance-tracker.de)
 
 Ein moderner, selbstgehosteter Finanz-Tracker zur Verwaltung von Einnahmen, Ausgaben und Daueraufträgen. Entwickelt mit Fokus auf Datensicherheit, Benutzerfreundlichkeit und einer sauberen Full-Stack-Architektur.
 
@@ -10,6 +10,8 @@ Ein moderner, selbstgehosteter Finanz-Tracker zur Verwaltung von Einnahmen, Ausg
 * **Sichere Authentifizierung:** Integration von **Keycloak** (OAuth2/OIDC) für professionelles Identity Management.
 * **Personalisierung:** Unterstützung für Dark/Light Mode und Mehrsprachigkeit (Deutsch/Englisch).
 * **Transparenz:** Interaktive Visualisierung der Cashflows und Kategorien-Verteilung.
+* **Datenbank-Verschlüsselung (AES):** Datensicherheit durch serverseitige Verschlüsselung sensibler Finanzdaten (Beträge, Beschreibungen) auf Datenbankebene.
+* **Individuelle Kategorien:** Neben globalen Standard-Kategorien kann jeder Nutzer eigene, private Kategorien mit individuellen Farben anlegen und verwalten.
 
 ## Technologie-Stack
 
